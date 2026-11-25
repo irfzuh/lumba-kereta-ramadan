@@ -1,0 +1,378 @@
+import { QuizQuestion } from '../types/game';
+
+export const QUIZ_QUESTIONS: QuizQuestion[] = [
+  {
+    id: 'q1',
+    category: 'Hukum Puasa',
+    question: 'Apakah hukum berpuasa pada Hari Raya Aidilfitri (1 Syawal)?',
+    options: ['Haram', 'Makruh', 'Sunat', 'Harus'],
+    correctIndex: 0,
+    explanation: 'Umat Islam diharamkan berpuasa pada 1 Syawal (Aidilfitri), 10 Zulhijjah (Aidiladha), dan Hari Tasyrik (11, 12, 13 Zulhijjah).',
+  },
+  {
+    id: 'q2',
+    category: 'Syarat & Rukun',
+    question: 'Antara berikut, yang manakah merupakan 1 daripada 4 syarat wajib puasa?',
+    options: ['Baligh', 'Mumayyiz', 'Bersahur', 'Suci daripada hadas kecil'],
+    correctIndex: 0,
+    explanation: 'Empat syarat wajib puasa ialah Islam, baligh, berakal, dan mampu (berkuasa) melaksanakan puasa.',
+  },
+  {
+    id: 'q3',
+    category: 'Syarat & Rukun',
+    question: 'Apakah rukun puasa yang pertama bagi seseorang yang ingin berpuasa?',
+    options: [
+      'Membaca doa berbuka',
+      'Niat berpuasa pada waktu malam',
+      'Mandi wajib sebelum subuh',
+      'Makan sahur sebelum imsak',
+    ],
+    correctIndex: 1,
+    explanation: 'Rukun puasa ada dua: berniat pada waktu malam (untuk puasa fardu) dan menahan diri daripada perkara yang membatalkan puasa.',
+  },
+  {
+    id: 'q4',
+    category: 'Syarat & Rukun',
+    question: 'Bilakah tempoh waktu menahan diri daripada perkara yang membatalkan puasa?',
+    options: [
+      'Dari tengah malam hingga waktu Asar',
+      'Dari terbit fajar sadiq hingga terbenam matahari',
+      'Dari waktu Imsak hingga terbit matahari',
+      'Dari azan Subuh hingga azan Isyak',
+    ],
+    correctIndex: 1,
+    explanation: 'Puasa bermula apabila terbit fajar sadiq (masuk waktu Subuh) dan berakhir apabila terbenam matahari (masuk waktu Maghrib).',
+  },
+  {
+    id: 'q5',
+    category: 'Hukum Puasa',
+    question: 'Apakah hukum berpuasa di bulan Ramadan bagi seorang Muslim yang cukup syarat?',
+    options: ['Sunat Muakkad', 'Wajib (Fardu Ain)', 'Harus', 'Fardu Kifayah'],
+    correctIndex: 1,
+    explanation: 'Puasa Ramadan merupakan Rukun Islam ketiga dan hukumnya wajib (Fardu Ain) ke atas setiap Muslim yang mukalaf serta mampu.',
+  },
+  {
+    id: 'q6',
+    category: 'Batal Puasa',
+    question: 'Antara tindakan berikut, yang manakah membatalkan puasa?',
+    options: [
+      'Tersalah makan kerana benar-benar terlupa',
+      'Mandi pada waktu tengah hari kerana panas',
+      'Makan atau minum dengan sengaja pada siang hari',
+      'Menelan air liur sendiri yang bersih',
+    ],
+    correctIndex: 2,
+    explanation: 'Makan atau minum dengan sengaja membatalkan puasa, manakala terlupa tidak membatalkan puasa.',
+  },
+  {
+    id: 'q7',
+    category: 'Batal Puasa',
+    question: 'Apakah hukum puasa seseorang yang muntah secara tidak sengaja?',
+    options: [
+      'Puasanya batal serta-merta',
+      'Puasanya tetap sah dan tidak batal',
+      'Puasanya makruh dan perlu diqada',
+      'Wajib membayar fidyah pada hari itu juga',
+    ],
+    correctIndex: 1,
+    explanation: 'Muntah dengan tidak sengaja tidak membatalkan puasa selagi tidak menelan semula muntah tersebut.',
+  },
+  {
+    id: 'q8',
+    category: 'Sunat & Adab',
+    question: 'Apakah amalan sunat yang sangat digalakkan sejurus sebelum masuk waktu Subuh?',
+    options: ['Bersahur', 'Solat Tarawih', 'Solat Sunat Aidilfitri', 'Berbuka awal'],
+    correctIndex: 0,
+    explanation: 'Bersahur ialah amalan sunat yang penuh keberkatan dan membantu memberi tenaga sepanjang hari berpuasa.',
+  },
+  {
+    id: 'q9',
+    category: 'Sunat & Adab',
+    question: 'Apakah sunnah Nabi SAW ketika berbuka puasa sebaik sahaja masuk waktu Maghrib?',
+    options: [
+      'Menunggu azan selesai baru minum',
+      'Menyegerakan berbuka dengan kurma atau air',
+      'Tidur dahulu sebelum makan',
+      'Berbuka selepas solat Isyak',
+    ],
+    correctIndex: 1,
+    explanation: 'Menyegerakan berbuka puasa sebaik masuk waktu Maghrib serta memulakan dengan buah kurma atau air kosong adalah sunnah yang mulia.',
+  },
+  {
+    id: 'q10',
+    category: 'Syarat & Rukun',
+    question: 'Manakah antara berikut bukan syarat sah puasa?',
+    options: [
+      'Beragama Islam',
+      'Mumayyiz (boleh membezakan baik dan buruk)',
+      'Suci daripada haid dan nifas',
+      'Sudah berkahwin',
+    ],
+    correctIndex: 3,
+    explanation: 'Syarat sah puasa ialah Islam, mumayyiz, suci daripada haid dan nifas, serta berpuasa pada hari yang dibolehkan.',
+  },
+  {
+    id: 'q11',
+    category: 'Keistimewaan Ramadan',
+    question: 'Apakah nama malam yang lebih baik daripada seribu bulan pada 10 malam terakhir Ramadan?',
+    options: ['Malam Nisfu Syaaban', 'Malam Lailatul Qadar', 'Malam Israk Mikraj', 'Malam Hijrah'],
+    correctIndex: 1,
+    explanation: 'Lailatul Qadar ialah malam kemuliaan yang ganjaran ibadahnya lebih baik daripada seribu bulan.',
+  },
+  {
+    id: 'q12',
+    category: 'Keistimewaan Ramadan',
+    question: 'Bilakah peristiwa Nuzul Al-Quran disambut oleh umat Islam?',
+    options: ['1 Ramadan', '10 Ramadan', '17 Ramadan', '27 Rejab'],
+    correctIndex: 2,
+    explanation: 'Nuzul Al-Quran memperingati penurunan wahyu pertama Al-Quran kepada Nabi Muhammad SAW pada 17 Ramadan.',
+  },
+  {
+    id: 'q13',
+    category: 'Hukum Puasa',
+    question: 'Hari Tasyrik jatuh pada tarikh 11, 12, dan 13 Zulhijjah. Apakah hukum berpuasa pada hari tersebut?',
+    options: ['Wajib', 'Sunat', 'Makruh', 'Haram'],
+    correctIndex: 3,
+    explanation: 'Hari Tasyrik ialah hari makan dan minum serta mengingati Allah; umat Islam diharamkan berpuasa pada hari-hari tersebut.',
+  },
+  {
+    id: 'q14',
+    category: 'Batal Puasa',
+    question: 'Jika seseorang yang berpuasa terjatuh ke dalam kolam dan tertelan air tanpa sengaja, apakah status puasanya?',
+    options: [
+      'Sah kerana tidak sengaja',
+      'Batal jika air termasuk dengan banyak tanpa niat',
+      'Batal sekiranya berkumur secara berlebihan hingga tertelan',
+      'Makruh sahaja',
+    ],
+    correctIndex: 2,
+    explanation: 'Berkumur secara berlebih-lebihan (mubalaghah) ketika berpuasa lalu tertelan air boleh membatalkan puasa.',
+  },
+  {
+    id: 'q15',
+    category: 'Sunat & Adab',
+    question: 'Solat sunat khusus yang didirikan pada malam-malam bulan Ramadan dikenali sebagai solat apa?',
+    options: ['Solat Dhuha', 'Solat Tarawih', 'Solat Istikharah', 'Solat Gerhana'],
+    correctIndex: 1,
+    explanation: 'Solat Sunat Tarawih dikerjakan pada setiap malam bulan Ramadan selepas solat fardu Isyak.',
+  },
+  {
+    id: 'q16',
+    category: 'Syarat & Rukun',
+    question: 'Apakah maksud "Mumayyiz" dalam syarat sah puasa?',
+    options: [
+      'Mampu berjalan jauh',
+      'Kanak-kanak yang sudah dapat membezakan perkara baik dan buruk',
+      'Orang yang bermusafir melebihi dua marhalah',
+      'Individu yang berhutang puasa tahun lalu',
+    ],
+    correctIndex: 1,
+    explanation: 'Mumayyiz ialah kanak-kanak yang telah mencapai tahap akal untuk membezakan antara yang baik dengan yang buruk.',
+  },
+  {
+    id: 'q17',
+    category: 'Keistimewaan Ramadan',
+    question: 'Apakah zakat wajib yang ditunaikan oleh umat Islam sebelum solat Hari Raya Aidilfitri?',
+    options: ['Zakat Perniagaan', 'Zakat Fitrah', 'Zakat Emas', 'Zakat Ternakan'],
+    correctIndex: 1,
+    explanation: 'Zakat Fitrah wajib ditunaikan sepanjang Ramadan sehingga sebelum solat sunat Aidilfitri untuk menyucikan diri dan membantu fakir miskin.',
+  },
+  {
+    id: 'q18',
+    category: 'Hukum Puasa',
+    question: 'Apakah keringanan (rukhsah) bagi orang sakit tenat atau musafir yang tidak mampu berpuasa di bulan Ramadan?',
+    options: [
+      'Dibenarkan berbuka tetapi wajib qada pada hari lain',
+      'Tidak perlu ganti selama-lamanya',
+      'Diharamkan berpuasa sepanjang tahun',
+      'Perlu berpuasa separuh hari sahaja',
+    ],
+    correctIndex: 0,
+    explanation: 'Golongan yang bermusafir atau sakit diberi rukhsah berbuka dan wajib menggantikan (qada) puasa tersebut pada hari lain.',
+  },
+  {
+    id: 'q19',
+    category: 'Sunat & Adab',
+    question: 'Antara berikut, perkara manakah dapat menjaga pahala puasa daripada berkurang?',
+    options: [
+      'Menjaga lidah daripada mengumpat dan berdusta',
+      'Tidur sepanjang hari tanpa solat',
+      'Membeli makanan secara membazir di bazar',
+      'Bertengkar dengan rakan sekelas',
+    ],
+    correctIndex: 0,
+    explanation: 'Puasa bukan sekadar menahan lapar dan dahaga, malah melatih diri menjaga pertuturan, penglihatan, dan akhlak mulia.',
+  },
+  {
+    id: 'q20',
+    category: 'Batal Puasa',
+    question: 'Adakah suntikan ubat atau vaksin di lengan membatalkan puasa?',
+    options: [
+      'Ya, batal serta-merta',
+      'Tidak batal kerana bukan melalui rongga terbuka dan bukan makanan',
+      'Batal jika berasa sakit',
+      'Wajib berbuka selepas suntikan',
+    ],
+    correctIndex: 1,
+    explanation: 'Suntikan perubatan melalui otot atau urat tidak membatalkan puasa kerana ia tidak masuk melalui rongga terbuka seperti mulut atau hidung.',
+  },
+  {
+    id: 'q21',
+    category: 'Syarat & Rukun',
+    question: 'Mengapakah orang gila (hilang akal) tidak diwajibkan berpuasa?',
+    options: [
+      'Kerana tidak memenuhi syarat wajib berakal',
+      'Kerana tidak sempat bersahur',
+      'Kerana tidak tahu waktu berbuka',
+      'Kerana masih mumayyiz',
+    ],
+    correctIndex: 0,
+    explanation: 'Syarat wajib puasa termasuklah berakal (waras); individu yang hilang akal tidak dibebankan taklif syarak.',
+  },
+  {
+    id: 'q22',
+    category: 'Hukum Puasa',
+    question: 'Apakah hukum berpuasa sunat pada hari Isnin dan Khamis?',
+    options: ['Makruh', 'Haram', 'Sunat', 'Wajib'],
+    correctIndex: 2,
+    explanation: 'Berpuasa pada hari Isnin dan Khamis adalah amalan sunat yang sangat digalakkan mengikut sunnah Rasulullah SAW.',
+  },
+  {
+    id: 'q23',
+    category: 'Keistimewaan Ramadan',
+    question: 'Apakah maksud amalan "Iktikaf" yang digalakkan pada 10 malam terakhir Ramadan?',
+    options: [
+      'Berhenti bekerja sepanjang bulan',
+      'Berdiam diri di dalam masjid dengan niat beribadah kepada Allah',
+      'Menghias rumah dengan lampu pelita',
+      'Mengadakan jamuan besar-besaran',
+    ],
+    correctIndex: 1,
+    explanation: 'Iktikaf bermaksud berada di dalam masjid dengan niat mendekatkan diri kepada Allah melalui solat, zikir, dan tadarus Al-Quran.',
+  },
+  {
+    id: 'q24',
+    category: 'Batal Puasa',
+    question: 'Apakah yang dimaksudkan dengan "pengsan sepanjang hari" dalam hukum puasa?',
+    options: [
+      'Puasa tetap sah walaupun pengsan dari sebelum Subuh hingga Maghrib',
+      'Puasanya batal jika pengsan sepanjang hari dari terbit fajar hingga terbenam matahari',
+      'Puasa hanya sah jika pengsan pada waktu malam',
+      'Perlu membayar dam',
+    ],
+    correctIndex: 1,
+    explanation: 'Jika seseorang pengsan sepanjang hari tanpa sedar walau seketika dari terbit fajar hingga terbenam matahari, puasanya tidak sah.',
+  },
+  {
+    id: 'q25',
+    category: 'Sunat & Adab',
+    question: 'Apakah antara hikmah utama ibadah puasa Ramadan terhadap diri murid?',
+    options: [
+      'Melatih sifat sabar, berdisiplin, dan bersyukur',
+      'Mengelakkan diri daripada belajar di sekolah',
+      'Menggalakkan pembaziran semasa berbuka',
+      'Supaya dapat tidur lebih lama di dalam kelas',
+    ],
+    correctIndex: 0,
+    explanation: 'Puasa membentuk jiwa yang sabar, berdisiplin mengurus masa, dan menumbuhkan empati terhadap golongan yang kurang berkemampuan.',
+  },
+  {
+    id: 'q26',
+    category: 'Hukum Puasa',
+    question: 'Apakah bayaran makanan asasi bagi orang tua yang terlalu uzur dan tidak lagi mampu berpuasa?',
+    options: ['Mahar', 'Fidyah', 'Kafarah sumpah', 'Diyat'],
+    correctIndex: 1,
+    explanation: 'Golongan warga emas yang uzur atau pesakit kronik yang tiada harapan sembuh wajib membayar fidyah mengikut bilangan hari yang ditinggalkan.',
+  },
+  {
+    id: 'q27',
+    category: 'Syarat & Rukun',
+    question: 'Bilakah waktu paling afdal untuk melafazkan niat puasa Ramadan setiap malam?',
+    options: [
+      'Selepas terbit matahari',
+      'Antara masuk waktu Maghrib sehingga sebelum terbit fajar sadiq (Subuh)',
+      'Pada waktu Zohor',
+      'Selepas solat Asar',
+    ],
+    correctIndex: 1,
+    explanation: 'Niat puasa fardu hendaklah dilakukan pada waktu malam iaitu antara terbenam matahari hingga sebelum terbit fajar sadiq.',
+  },
+  {
+    id: 'q28',
+    category: 'Sunat & Adab',
+    question: 'Mengapakah kita digalakkan bersedekah lebih banyak pada bulan Ramadan?',
+    options: [
+      'Pahala kebajikan dilipatgandakan dan membantu golongan memerlukan',
+      'Supaya mendapat pujian rakan-rakan',
+      'Kerana kedai ditutup pada waktu malam',
+      'Untuk menggantikan solat fardu',
+    ],
+    correctIndex: 0,
+    explanation: 'Rasulullah SAW adalah insan yang paling pemurah, dan kemurahan hati Baginda paling terserlah pada bulan Ramadan.',
+  },
+];
+
+export interface StudySection {
+  title: string;
+  subtitle: string;
+  items: { label: string; detail: string }[];
+}
+
+export const RAMADAN_NOTES: StudySection[] = [
+  {
+    title: '01. Syarat Wajib & Syarat Sah Puasa',
+    subtitle: 'Perbezaan antara golongan yang diwajibkan berpuasa dan kesahihan ibadah puasa.',
+    items: [
+      {
+        label: '4 Syarat Wajib Puasa',
+        detail: 'Islam, Baligh (cukup umur), Berakal (waras), dan Mampu / Berkuasa (sihat serta bukan musafir yang uzur).',
+      },
+      {
+        label: '4 Syarat Sah Puasa',
+        detail: 'Beragama Islam, Mumayyiz, Suci daripada haid dan nifas, serta berpuasa pada hari yang dibolehkan syarak.',
+      },
+    ],
+  },
+  {
+    title: '02. Dua Rukun Puasa',
+    subtitle: 'Perkara asas yang mesti dipenuhi supaya ibadah puasa diterima.',
+    items: [
+      {
+        label: '1. Niat',
+        detail: 'Berniat di dalam hati pada waktu malam (antara Maghrib hingga sebelum fajar Subuh) bagi puasa fardu Ramadan.',
+      },
+      {
+        label: '2. Menahan Diri',
+        detail: 'Menahan diri daripada segala perkara yang membatalkan puasa bermula terbit fajar sadiq hingga terbenam matahari.',
+      },
+    ],
+  },
+  {
+    title: '03. Hukum Hari Diharamkan Berpuasa',
+    subtitle: 'Tarikh penting yang dilarang berpuasa dalam takwim Islam.',
+    items: [
+      {
+        label: 'Hari Raya Aidilfitri & Aidiladha',
+        detail: 'Haram berpuasa pada 1 Syawal dan 10 Zulhijjah kerana kedua-duanya merupakan hari kebesaran dan kesyukuran umat Islam.',
+      },
+      {
+        label: 'Hari Tasyrik (11, 12, 13 Zulhijjah)',
+        detail: 'Haram berpuasa pada tiga hari selepas Aidiladha kerana ia hari menikmati hidangan korban dan mengingati Allah.',
+      },
+    ],
+  },
+  {
+    title: '04. Perkara Membatalkan & Amalan Sunat',
+    subtitle: 'Panduan menjaga kualiti puasa sepanjang Ramadan.',
+    items: [
+      {
+        label: 'Perkara Membatalkan Puasa',
+        detail: 'Makan atau minum dengan sengaja, muntah dengan sengaja, memasukkan sesuatu ke dalam rongga terbuka, pengsan sepanjang hari, atau keluar haid/nifas.',
+      },
+      {
+        label: 'Amalan Sunat Utama',
+        detail: 'Bersahur di akhir malam, menyegerakan berbuka dengan kurma atau air, solat Tarawih, tadarus Al-Quran, bersedekah, dan beriktikaf.',
+      },
+    ],
+  },
+];

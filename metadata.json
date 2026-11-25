@@ -1,0 +1,6 @@
+{
+  "name": "Lumba Kereta Ramadan",
+  "description": "Permainan kuiz perlumbaan interaktif bertemakan ibadah puasa Ramadan di padang pasir sebelum matahari terbenam.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

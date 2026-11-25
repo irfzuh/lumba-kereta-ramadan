@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lumba Kereta Ramadan</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%;
+    height: 500px;
+    max-height: 500px;
+    overflow: hidden;
+    background: #0F172A;
+    color: #F8FAFC;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  #lkr-app {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #0F172A;
+    color: #F8FAFC;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    user-select: none;
+  }
+  .lkr-victory-flash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 25;
+    display: none;
+  }
+  .lkr-victory-flash.show {
+    display: block;
+    animation: lkrVicFlash 2.2s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  #lkr-confetti {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 30;
+    display: none;
+  }
+  #lkr-confetti.show { display: block; }
+  @keyframes lkrVicFlash {
+    0% { opacity: 0; }
+    18% { opacity: 0.85; }
+    55% { opacity: 0.42; }
+    100% { opacity: 0.16; }
+  }
+  @keyframes lkrTrophyPop {
+    0% { opacity: 0; transform: scale(0.75) translateY(6px); }
+    65% { opacity: 1; transform: scale(1.06) translateY(-2px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes lkrTrophyFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  .lkr-header {
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 12px;
+    background: #020617;
+    border-bottom: 1px solid #1E293B;
+    position: relative;
+    z-index: 22;
+  }
+  .lkr-brand {
+    background: transparent;
+    border: 0;
+    font-weight: 800;
+    font-size: 13.5px;
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    text-align: left;
+  }
+  .lkr-brand:hover { color: #FCD34D; }
+  .lkr-nav { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .lkr-nav button {
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    color: #CBD5E1;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 2px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .lkr-nav button.active { color: #FCD34D; border-bottom-color: #FBBF24; }
+  .lkr-btn-primary {
+    background: #F59E0B;
+    color: #0F172A;
+    border: 0;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .lkr-btn-primary:hover { background: #FBBF24; }
+  .lkr-btn-ghost {
+    background: #0F172A;
+    color: #E2E8F0;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 6px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .lkr-btn-ghost:hover { background: #1E293B; color: #FFFFFF; }
+  .lkr-main {
+    flex: 1;
+    min-height: 0;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .lkr-menu {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    background: #111827;
+    border: 1px solid #1E293B;
+    border-radius: 12px;
+    padding: 10px 12px;
+    overflow-y: auto;
+  }
+  .lkr-menu > * { flex-shrink: 0; }
+  .lkr-menu-top { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lkr-label { display: block; font-size: 11px; font-weight: 600; color: #CBD5E1; margin-bottom: 4px; }
+  .lkr-input {
+    width: 100%;
+    background: #020617;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #FFFFFF;
+    padding: 6px 10px;
+    font-size: 12px;
+    outline: none;
+  }
+  .lkr-input:focus { border-color: #F59E0B; }
+  .lkr-diff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .lkr-diff-btn {
+    background: #020617;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #CBD5E1;
+    padding: 5px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .lkr-diff-btn.active { border-color: #F59E0B; background: rgba(245,158,11,0.16); color: #FDE68A; }
+  .lkr-cars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .lkr-car-card {
+    position: relative;
+    height: 76px;
+    border-radius: 9px;
+    border: 1px solid #334155;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0F172A, #1E293B);
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+  }
+  .lkr-car-card.active { border: 2px solid #FBBF24; box-shadow: 0 0 0 1px rgba(251,191,36,0.35); }
+  .lkr-car-card img {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .lkr-car-fallback {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .lkr-car-card .cap {
+    position: absolute;
+    z-index: 3;
+    inset: auto 0 0 0;
+    padding: 14px 6px 4px;
+    background: linear-gradient(to top, rgba(2,6,23,0.95), transparent);
+    font-size: 10px;
+    font-weight: 700;
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lkr-camel-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-radius: 9px;
+    border: 1px solid #334155;
+    background: #020617;
+    color: #E2E8F0;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .lkr-camel-btn.active { border: 2px solid #FBBF24; background: rgba(245,158,11,0.14); color: #FFFFFF; }
+  .lkr-rules-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 11px; color: #CBD5E1; }
+  .lkr-rule-box { background: #0F172A; border: 1px solid #1E293B; border-radius: 8px; padding: 6px 8px; line-height: 1.3; }
+  .lkr-start-big {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 0;
+    background: #F59E0B;
+    color: #0F172A;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .lkr-start-big:hover { background: #FBBF24; }
+  .lkr-play { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
+  .lkr-hud {
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 10px;
+    border-radius: 9px;
+    border: 1px solid #1E293B;
+    background: #111827;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+  .lkr-hud-stats { display: flex; align-items: center; gap: 10px; white-space: nowrap; overflow: hidden; }
+  .lkr-hud-stats b { color: #FDE68A; }
+  .lkr-hud-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+  .lkr-icon-btn {
+    background: #0F172A;
+    border: 1px solid #334155;
+    color: #E2E8F0;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .lkr-icon-btn.on { border-color: #F59E0B; color: #FDE68A; }
+  .lkr-quiz {
+    flex-shrink: 0;
+    background: #FAF7F2;
+    color: #0F172A;
+    border: 1px solid #FDE68A;
+    border-radius: 10px;
+    padding: 7px 10px;
+  }
+  .lkr-quiz-top { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: #475569; margin-bottom: 3px; }
+  .lkr-quiz-q { font-size: 13px; font-weight: 800; color: #0F172A; line-height: 1.25; margin-bottom: 5px; }
+  .lkr-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+  .lkr-opt {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-align: left;
+    padding: 4px 8px;
+    border-radius: 7px;
+    border: 1px solid #CBD5E1;
+    background: #FFFFFF;
+    color: #0F172A;
+    font-size: 11.5px;
+    line-height: 1.2;
+    cursor: pointer;
+  }
+  .lkr-opt:hover:not(:disabled) { border-color: #D97706; background: #FFFBEB; }
+  .lkr-opt.correct { background: #ECFDF5; border-color: #059669; color: #064E3B; font-weight: 700; }
+  .lkr-opt.wrong { background: #FEF2F2; border-color: #DC2626; color: #7F1D1D; }
+  .lkr-opt-key {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: #F1F5F9;
+    color: #334155;
+    font-size: 10px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .lkr-quiz-fb {
+    margin-top: 5px;
+    padding-top: 4px;
+    border-top: 1px solid #E2E8F0;
+    font-size: 10.5px;
+    color: #475569;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lkr-canvas-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 120px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #334155;
+    background: #0F172A;
+  }
+  #lkr-canvas { width: 100%; height: 100%; display: block; }
+  .lkr-car-badge {
+    position: absolute;
+    top: 34px;
+    left: 10px;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px 3px 4px;
+    border-radius: 7px;
+    border: 1px solid rgba(51,65,85,0.9);
+    background: rgba(2,6,23,0.82);
+    pointer-events: none;
+  }
+  .lkr-car-badge.show { display: flex; }
+  .lkr-car-badge img { width: 32px; height: 20px; object-fit: cover; border-radius: 4px; }
+  .lkr-car-badge span { font-size: 10px; font-weight: 700; color: #F1F5F9; white-space: nowrap; }
+  .lkr-nitro-card {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 178px;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 2px solid #FBBF24;
+    background: rgba(2, 6, 23, 0.94);
+    display: none;
+    pointer-events: none;
+  }
+  .lkr-nitro-card.show { display: block; }
+  .lkr-nitro-img-wrap { position: relative; height: 48px; width: 100%; overflow: hidden; background: linear-gradient(90deg,#1E1B4B,#9A3412,#EA580C); }
+  .lkr-nitro-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.88; }
+  .lkr-nitro-bar { padding: 4px 8px; font-size: 10px; font-weight: 800; color: #FDE68A; display: flex; justify-content: space-between; gap: 6px; }
+  .lkr-nitro-bar span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lkr-panel {
+    position: relative;
+    z-index: 20;
+    flex: 1;
+    min-height: 0;
+    background: #111827;
+    border: 1px solid #1E293B;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+  }
+  .lkr-panel.won {
+    background: rgba(17, 24, 39, 0.9);
+    border-color: rgba(251, 191, 36, 0.65);
+    box-shadow: 0 0 28px rgba(245, 158, 11, 0.16);
+  }
+  .lkr-sum-head { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .lkr-trophy-box {
+    width: 78px;
+    height: 78px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    background: #020617;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lkr-trophy-box.pop { animation: lkrTrophyPop 500ms cubic-bezier(0.16,1,0.3,1) forwards; }
+  .lkr-trophy-box svg.float { animation: lkrTrophyFloat 2.4s ease-in-out infinite; }
+  .lkr-stats-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0; flex-shrink: 0; }
+  .lkr-stat-box { background: #0F172A; border: 1px solid #1E293B; border-radius: 8px; padding: 8px; }
+  .lkr-stat-box small { font-size: 10.5px; color: #94A3B8; display: block; }
+  .lkr-stat-box strong { font-size: 17px; color: #FBBF24; font-variant-numeric: tabular-nums; }
+  .lkr-filter-bar { display: inline-flex; gap: 3px; background: #020617; border: 1px solid #1E293B; border-radius: 8px; padding: 3px; }
+  .lkr-filter-btn { background: transparent; border: 0; color: #CBD5E1; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px; cursor: pointer; }
+  .lkr-filter-btn.active { background: #F59E0B; color: #0F172A; font-weight: 700; }
+  .lkr-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .lkr-table th, .lkr-table td { padding: 6px 8px; border-bottom: 1px solid #1E293B; text-align: left; }
+  .lkr-table th { color: #94A3B8; font-size: 10.5px; }
+  .lkr-notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lkr-note-card { background: #0F172A; border: 1px solid #1E293B; border-radius: 10px; padding: 10px 12px; }
+  .lkr-note-card h3 { font-size: 13px; color: #FCD34D; margin-bottom: 4px; }
+  .lkr-note-card p { font-size: 11px; color: #CBD5E1; line-height: 1.4; margin-bottom: 6px; }
+  .lkr-note-card strong { display: block; font-size: 11.5px; color: #FFFFFF; margin-top: 4px; }
+  @media (max-width: 600px) {
+    .lkr-menu-top, .lkr-notes-grid { grid-template-columns: 1fr; }
+    .lkr-cars-grid { grid-template-columns: repeat(2, 1fr); }
+    .lkr-car-card { height: 56px; }
+    .lkr-rules-row { display: none; }
+    .lkr-stats-4 { grid-template-columns: repeat(2, 1fr); }
+    .lkr-quiz-q { font-size: 12px; }
+    .lkr-opt { font-size: 10.5px; min-height: 32px; }
+    .lkr-trophy-box { width: 64px; height: 64px; }
+  }
+</style>
+</head>
+<body>
+<div id="lkr-app">
+  <div id="lkr-victory-flash" class="lkr-victory-flash" aria-hidden="true"></div>
+  <canvas id="lkr-confetti" aria-hidden="true"></canvas>
+
+  <header class="lkr-header">
+    <button type="button" id="brand-home" class="lkr-brand">Lumba Kereta Ramadan</button>
+    <nav class="lkr-nav">
+      <button type="button" id="nav-arena" class="active">Arena</button>
+      <button type="button" id="nav-board">Pendahulu</button>
+      <button type="button" id="nav-notes">Nota</button>
+    </nav>
+    <button type="button" id="header-cta" class="lkr-btn-primary">Mula Lumba</button>
+  </header>
+
+  <main class="lkr-main">
+    <section id="view-menu" class="lkr-menu">
+      <div class="lkr-menu-top">
+        <div>
+          <label class="lkr-label" for="lkr-name">Nama Murid</label>
+          <input id="lkr-name" class="lkr-input" type="text" maxlength="28" value="Murid 1" placeholder="Nama anda..." />
+        </div>
+        <div>
+          <span class="lkr-label">Tahap Pelumba AI</span>
+          <div class="lkr-diff-grid">
+            <button type="button" class="lkr-diff-btn" data-diff="easy">Santai</button>
+            <button type="button" class="lkr-diff-btn active" data-diff="medium">Sederhana</button>
+            <button type="button" class="lkr-diff-btn" data-diff="hard">Pantas</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="lkr-label">Pilih Kereta Lumba atau Unta Gurun</span>
+        <div id="lkr-cars" class="lkr-cars-grid"></div>
+      </div>
+
+      <button type="button" id="lkr-camel-btn" class="lkr-camel-btn">
+        <span>Unta Gurun Ramadan (Bunyi tapak kaki)</span>
+        <span id="lkr-camel-check" style="color:#FBBF24;display:none;">Dipilih</span>
+      </button>
+
+      <div class="lkr-rules-row">
+        <div class="lkr-rule-box"><strong style="color:#34D399;">Betul = Nitro</strong><br/>Pecutan &amp; jejak api aktif!</div>
+        <div class="lkr-rule-box"><strong style="color:#F87171;">Salah = Henti 2s</strong><br/>AI terus mara ke hadapan.</div>
+        <div class="lkr-rule-box"><strong style="color:#FBBF24;">1,000m Senja</strong><br/>Tamat sebelum terbenam!</div>
+      </div>
+
+      <button type="button" id="lkr-start-btn" class="lkr-start-big">Mulakan Perlumbaan</button>
+    </section>
+
+    <section id="view-play" class="lkr-play" style="display:none;">
+      <div class="lkr-hud">
+        <div class="lkr-hud-stats">
+          <span>Senja: <b id="hud-time">60.0s</b></span>
+          <span>Laju: <b id="hud-speed">44 km/j</b></span>
+          <span>Jarak: <b id="hud-dist">0m / 0m</b></span>
+        </div>
+        <div class="lkr-hud-actions">
+          <button type="button" id="btn-music" class="lkr-icon-btn on">Muzik: ON</button>
+          <button type="button" id="btn-mute" class="lkr-icon-btn on">Bunyi: ON</button>
+        </div>
+      </div>
+
+      <div class="lkr-quiz">
+        <div class="lkr-quiz-top">
+          <span id="q-meta">Soalan 1</span>
+          <span id="q-status">Tekan A-D atau 1-4</span>
+        </div>
+        <div id="q-text" class="lkr-quiz-q"></div>
+        <div id="q-opts" class="lkr-opts"></div>
+        <div id="q-fb" class="lkr-quiz-fb">Jawab betul untuk kuasa Nitro · Jawab salah terhenti 2 saat</div>
+      </div>
+
+      <div class="lkr-canvas-wrap">
+        <canvas id="lkr-canvas"></canvas>
+        <div id="car-badge" class="lkr-car-badge">
+          <img id="car-badge-img" alt="Kenderaan dipilih" referrerpolicy="no-referrer" />
+          <span id="car-badge-name"></span>
+        </div>
+        <div id="nitro-card" class="lkr-nitro-card">
+          <div id="nitro-img-wrap" class="lkr-nitro-img-wrap">
+            <img id="nitro-car-img" alt="Nitro aktif" referrerpolicy="no-referrer" />
+          </div>
+          <div class="lkr-nitro-bar">
+            <span id="nitro-title-txt">NITRO AKTIF!</span>
+            <span id="nitro-speed-txt">125 km/j</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-summary" class="lkr-panel" style="display:none;">
+      <div class="lkr-sum-head">
+        <div id="sum-trophy" class="lkr-trophy-box"></div>
+        <div style="min-width:0;">
+          <div id="sum-sub" style="font-size:11px;color:#FBBF24;font-weight:700;margin-bottom:3px;"></div>
+          <h2 id="sum-title" style="font-size:18px;font-weight:800;color:#FFFFFF;margin-bottom:4px;line-height:1.2;"></h2>
+          <p id="sum-desc" style="font-size:12px;color:#CBD5E1;line-height:1.35;"></p>
+        </div>
+      </div>
+      <div class="lkr-stats-4">
+        <div class="lkr-stat-box"><small>Jumlah Skor</small><strong id="sum-score">0</strong></div>
+        <div class="lkr-stat-box"><small>Ketepatan</small><strong id="sum-acc">0%</strong></div>
+        <div class="lkr-stat-box"><small>Puncak Laju</small><strong id="sum-top">0</strong></div>
+        <div class="lkr-stat-box"><small>Baki Senja</small><strong id="sum-rem">0s</strong></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;flex-shrink:0;">
+        <button type="button" id="sum-home-btn" class="lkr-btn-ghost">Home</button>
+        <button type="button" id="sum-board-btn" class="lkr-btn-ghost">Papan Pendahulu</button>
+        <button type="button" id="sum-again-btn" class="lkr-btn-primary">Main Semula</button>
+      </div>
+    </section>
+
+    <section id="view-board" class="lkr-panel" style="display:none;justify-content:flex-start;gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0;">
+        <h2 style="font-size:15px;font-weight:800;color:#FFFFFF;">Papan Pendahulu Pelumba</h2>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <div class="lkr-filter-bar">
+            <button type="button" class="lkr-filter-btn active" data-filter="all">Semua</button>
+            <button type="button" class="lkr-filter-btn" data-filter="car">Kereta</button>
+            <button type="button" class="lkr-filter-btn" data-filter="camel">Unta</button>
+          </div>
+          <button type="button" id="board-reset-btn" class="lkr-btn-ghost">Set Semula</button>
+          <button type="button" id="board-play-btn" class="lkr-btn-primary">Main Sekarang</button>
+        </div>
+      </div>
+      <div style="overflow-y:auto;flex:1;min-height:0;">
+        <table class="lkr-table">
+          <thead>
+            <tr><th>Ked.</th><th>Nama Murid</th><th>Kenderaan</th><th>Tahap</th><th>Ketepatan</th><th style="text-align:right;">Skor</th></tr>
+          </thead>
+          <tbody id="board-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="view-notes" class="lkr-panel" style="display:none;justify-content:flex-start;gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;">
+        <div>
+          <h2 style="font-size:15px;font-weight:800;color:#FFFFFF;">Nota Ringkas Ibadah Puasa</h2>
+          <p style="font-size:11px;color:#94A3B8;">Ulang kaji pantas syarat, rukun, dan hukum puasa sebelum berlumba.</p>
+        </div>
+        <button type="button" id="notes-play-btn" class="lkr-btn-primary">Uji Ilmu di Litar</button>
+      </div>
+      <div class="lkr-notes-grid" style="overflow-y:auto;flex:1;min-height:0;">
+        <div class="lkr-note-card">
+          <h3>01. Syarat Wajib &amp; Syarat Sah</h3>
+          <strong>4 Syarat Wajib Puasa</strong>
+          <p>Islam, Baligh (cukup umur), Berakal (waras), dan Mampu / sihat.</p>
+          <strong>4 Syarat Sah Puasa</strong>
+          <p>Beragama Islam, Mumayyiz, suci daripada haid &amp; nifas, dan pada hari yang dibolehkan syarak.</p>
+        </div>
+        <div class="lkr-note-card">
+          <h3>02. Dua Rukun Puasa</h3>
+          <strong>1. Niat pada Waktu Malam</strong>
+          <p>Berniat di dalam hati antara Maghrib hingga sebelum terbit fajar Subuh.</p>
+          <strong>2. Menahan Diri</strong>
+          <p>Menahan diri daripada perkara membatalkan puasa dari fajar sadiq hingga terbenam matahari.</p>
+        </div>
+        <div class="lkr-note-card">
+          <h3>03. Hari Diharamkan Berpuasa</h3>
+          <strong>1 Syawal &amp; 10 Zulhijjah</strong>
+          <p>Haram berpuasa pada Hari Raya Aidilfitri dan Hari Raya Aidiladha.</p>
+          <strong>Hari Tasyrik (11, 12, 13 Zulhijjah)</strong>
+          <p>Haram berpuasa pada tiga hari selepas Aidiladha.</p>
+        </div>
+        <div class="lkr-note-card">
+          <h3>04. Batal Puasa &amp; Amalan Sunat</h3>
+          <strong>Perkara Membatalkan</strong>
+          <p>Makan atau minum dengan sengaja, muntah dengan sengaja, pengsan sepanjang hari, atau keluar haid/nifas.</p>
+          <strong>Amalan Sunat Utama</strong>
+          <p>Bersahur, menyegerakan berbuka dengan kurma atau air, solat Tarawih, tadarus Al-Quran, dan iktikaf.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  function startApp(){
+    if(window.__lkrInitialized) return;
+    window.__lkrInitialized = true;
+
+    const CARS = [
+      { id:"car-gt", name:"JZX100 Drift Putih", imageUrl:"https://res.cloudinary.com/cd7ck4mc/image/upload/v1795582432/586945763973759570.jpg" },
+      { id:"car-drift", name:"Porsche GT3 Biru", imageUrl:"https://res.cloudinary.com/cd7ck4mc/image/upload/v1795582644/DRIFTING.jpg" },
+      { id:"car-ferrari", name:"Ferrari F40 LBWK", imageUrl:"https://res.cloudinary.com/cd7ck4mc/image/upload/v1795582643/Ferrari_movie_night.jpg" },
+      { id:"car-hyper", name:"Lancer Evo Merah", imageUrl:"https://res.cloudinary.com/cd7ck4mc/image/upload/v1795582643/ychk4boqflentcyvjhwn.jpg" }
+    ];
+
+    const QUESTIONS = [
+      { category:"Hukum Puasa", question:"Apakah hukum berpuasa pada Hari Raya Aidilfitri (1 Syawal)?", options:["Haram","Makruh","Sunat","Harus"], correctIndex:0, explanation:"Umat Islam diharamkan berpuasa pada 1 Syawal, 10 Zulhijjah, dan Hari Tasyrik." },
+      { category:"Syarat & Rukun", question:"Yang manakah merupakan 1 daripada 4 syarat wajib puasa?", options:["Baligh","Mumayyiz","Bersahur","Suci daripada hadas kecil"], correctIndex:0, explanation:"Empat syarat wajib puasa ialah Islam, baligh, berakal, dan mampu." },
+      { category:"Syarat & Rukun", question:"Apakah rukun puasa yang pertama bagi seseorang yang ingin berpuasa?", options:["Membaca doa berbuka","Niat berpuasa pada waktu malam","Mandi wajib sebelum subuh","Makan sahur sebelum imsak"], correctIndex:1, explanation:"Rukun puasa ada dua: berniat pada waktu malam dan menahan diri." },
+      { category:"Syarat & Rukun", question:"Bilakah tempoh waktu menahan diri daripada perkara yang membatalkan puasa?", options:["Tengah malam hingga Asar","Terbit fajar sadiq hingga terbenam matahari","Imsak hingga terbit matahari","Azan Subuh hingga Isyak"], correctIndex:1, explanation:"Puasa bermula dari terbit fajar sadiq (Subuh) hingga terbenam matahari (Maghrib)." },
+      { category:"Hukum Puasa", question:"Apakah hukum berpuasa di bulan Ramadan bagi Muslim yang cukup syarat?", options:["Sunat Muakkad","Wajib (Fardu Ain)","Harus","Fardu Kifayah"], correctIndex:1, explanation:"Puasa Ramadan ialah Rukun Islam ketiga yang wajib (Fardu Ain)." },
+      { category:"Batal Puasa", question:"Antara tindakan berikut, yang manakah membatalkan puasa?", options:["Tersalah makan kerana terlupa","Mandi pada waktu tengah hari","Makan atau minum dengan sengaja","Menelan air liur sendiri"], correctIndex:2, explanation:"Makan atau minum dengan sengaja membatalkan puasa." },
+      { category:"Batal Puasa", question:"Apakah hukum puasa seseorang yang muntah secara tidak sengaja?", options:["Batal serta-merta","Tetap sah dan tidak batal","Makruh dan perlu qada","Wajib bayar fidyah"], correctIndex:1, explanation:"Muntah tanpa sengaja tidak membatalkan puasa selagi tidak ditelan semula." },
+      { category:"Sunat & Adab", question:"Apakah amalan sunat yang digalakkan sejurus sebelum masuk waktu Subuh?", options:["Bersahur","Solat Tarawih","Solat Aidilfitri","Berbuka awal"], correctIndex:0, explanation:"Bersahur ialah amalan sunat yang penuh keberkatan." },
+      { category:"Sunat & Adab", question:"Apakah sunnah Nabi SAW ketika berbuka sebaik masuk waktu Maghrib?", options:["Menunggu azan tamat","Menyegerakan berbuka dengan kurma atau air","Tidur dahulu sebelum makan","Berbuka selepas Isyak"], correctIndex:1, explanation:"Menyegerakan berbuka dengan kurma atau air ialah sunnah Rasulullah SAW." },
+      { category:"Syarat & Rukun", question:"Manakah antara berikut bukan syarat sah puasa?", options:["Beragama Islam","Mumayyiz","Suci daripada haid dan nifas","Sudah berkahwin"], correctIndex:3, explanation:"Syarat sah puasa ialah Islam, mumayyiz, suci haid/nifas, dan hari yang sah berpuasa." },
+      { category:"Keistimewaan Ramadan", question:"Apakah nama malam yang lebih baik daripada seribu bulan di akhir Ramadan?", options:["Nisfu Syaaban","Malam Lailatul Qadar","Israk Mikraj","Malam Hijrah"], correctIndex:1, explanation:"Lailatul Qadar lebih baik daripada seribu bulan." },
+      { category:"Keistimewaan Ramadan", question:"Bilakah peristiwa Nuzul Al-Quran disambut oleh umat Islam?", options:["1 Ramadan","10 Ramadan","17 Ramadan","27 Rejab"], correctIndex:2, explanation:"Nuzul Al-Quran disambut pada 17 Ramadan." },
+      { category:"Hukum Puasa", question:"Apakah hukum berpuasa pada Hari Tasyrik (11, 12, 13 Zulhijjah)?", options:["Wajib","Sunat","Makruh","Haram"], correctIndex:3, explanation:"Umat Islam diharamkan berpuasa pada Hari Tasyrik." },
+      { category:"Sunat & Adab", question:"Solat sunat khusus pada malam bulan Ramadan dikenali sebagai?", options:["Solat Dhuha","Solat Tarawih","Solat Istikharah","Solat Gerhana"], correctIndex:1, explanation:"Solat Tarawih dikerjakan setiap malam Ramadan selepas Isyak." },
+      { category:"Keistimewaan Ramadan", question:"Apakah zakat wajib yang ditunaikan sebelum solat Aidilfitri?", options:["Zakat Perniagaan","Zakat Fitrah","Zakat Emas","Zakat Ternakan"], correctIndex:1, explanation:"Zakat Fitrah wajib ditunaikan sebelum solat sunat Aidilfitri." },
+      { category:"Hukum Puasa", question:"Apakah keringanan bagi musafir atau orang sakit yang tidak mampu berpuasa?", options:["Boleh berbuka tetapi wajib qada","Tidak perlu ganti selamanya","Haram berpuasa","Puasa separuh hari"], correctIndex:0, explanation:"Musafir dan orang sakit diberi rukhsah berbuka dan wajib qada." },
+      { category:"Batal Puasa", question:"Adakah suntikan ubat atau vaksin di lengan membatalkan puasa?", options:["Ya, batal serta-merta","Tidak batal kerana bukan melalui rongga terbuka","Batal jika sakit","Wajib berbuka"], correctIndex:1, explanation:"Suntikan melalui otot/urat bukan makanan dan tidak melalui rongga terbuka." },
+      { category:"Hukum Puasa", question:"Apakah bayaran bagi warga emas yang uzur dan tidak lagi mampu berpuasa?", options:["Mahar","Fidyah","Kafarah sumpah","Diyat"], correctIndex:1, explanation:"Warga emas uzur yang tidak mampu berpuasa wajib membayar fidyah." },
+      { category:"Syarat & Rukun", question:"Apakah maksud 'Mumayyiz' dalam syarat sah puasa?", options:["Mampu berjalan jauh","Kanak-kanak yang sudah dapat membezakan baik dan buruk","Orang yang bermusafir","Individu yang berhutang puasa"], correctIndex:1, explanation:"Mumayyiz ialah kanak-kanak yang dapat membezakan perkara baik dan buruk." },
+      { category:"Sunat & Adab", question:"Antara berikut, perkara manakah dapat menjaga pahala puasa daripada berkurang?", options:["Menjaga lidah daripada mengumpat dan berdusta","Tidur sepanjang hari tanpa solat","Membazir di bazar","Bertengkar dengan rakan"], correctIndex:0, explanation:"Puasa melatih diri menjaga pertuturan, penglihatan, dan akhlak mulia." },
+      { category:"Keistimewaan Ramadan", question:"Apakah maksud amalan 'Iktikaf' pada 10 malam terakhir Ramadan?", options:["Berhenti bekerja","Berdiam diri di dalam masjid untuk beribadah","Menghias rumah","Mengadakan jamuan"], correctIndex:1, explanation:"Iktikaf bermaksud berada di dalam masjid dengan niat mendekatkan diri kepada Allah." },
+      { category:"Batal Puasa", question:"Apakah hukum jika seseorang pengsan sepanjang hari dari fajar hingga Maghrib?", options:["Puasa tetap sah","Puasanya batal","Hanya sah jika pengsan malam","Perlu bayar dam"], correctIndex:1, explanation:"Pengsan sepanjang hari tanpa sedar walau seketika menyebabkan puasa tidak sah." },
+      { category:"Syarat & Rukun", question:"Bilakah waktu paling afdal melafazkan niat puasa Ramadan?", options:["Selepas terbit matahari","Antara Maghrib hingga sebelum fajar Subuh","Pada waktu Zohor","Selepas Asar"], correctIndex:1, explanation:"Niat puasa fardu dilakukan pada waktu malam sebelum fajar sadiq." },
+      { category:"Sunat & Adab", question:"Mengapakah kita digalakkan bersedekah lebih banyak pada bulan Ramadan?", options:["Pahala dilipatgandakan dan membantu yang memerlukan","Untuk mendapat pujian","Kerana kedai tutup","Untuk ganti solat"], correctIndex:0, explanation:"Pahala sedekah dilipatgandakan pada bulan Ramadan." }
+    ];
+
+    const FINISH_DIST = 1000, BASE_SPEED = 44, NITRO_SPEED = 125, SPEED_TO_MPS = 0.34;
+    const DIFF_CFG = { easy:{ai:52,time:70,mult:1}, medium:{ai:62,time:60,mult:1.1}, hard:{ai:72,time:55,mult:1.2} };
+    const STORE_KEY = "lumba_kereta_ramadan_leaderboard_v1";
+
+    const SEEDED_BOARD = [
+      { id:"seed-1", playerName:"Aiman Hakim", vehicle:"car", carName:"JZX100 Drift Putih", difficulty:"hard", accuracy:92, timeRemaining:24.5, score:1840 },
+      { id:"seed-2", playerName:"Nurul Izzah", vehicle:"camel", difficulty:"medium", accuracy:88, timeRemaining:19.2, score:1620 },
+      { id:"seed-3", playerName:"Danish Irfan", vehicle:"car", carName:"Porsche GT3 Biru", difficulty:"medium", accuracy:83, timeRemaining:15.8, score:1490 },
+      { id:"seed-4", playerName:"Siti Aisyah", vehicle:"camel", difficulty:"easy", accuracy:90, timeRemaining:14.0, score:1350 },
+      { id:"seed-5", playerName:"Muhammad Faiz", vehicle:"car", carName:"Ferrari F40 LBWK", difficulty:"easy", accuracy:78, timeRemaining:10.4, score:1180 }
+    ];
+    let memoryBoard = [].concat(SEEDED_BOARD);
+
+    let state = {
+      view:"menu", vehicle:"car", carId:CARS[0].id, diff:"medium", boardFilter:"all", muted:false, musicMuted:false,
+      active:false, playerDist:0, aiDist:0, speed:BASE_SPEED, bgOffset:0, status:"normal", statusTimer:0,
+      timeRem:60, totalTime:60, correct:0, wrong:0, streak:0, bestStreak:0, topSpeed:BASE_SPEED, deck:[], qIdx:0, answered:false
+    };
+
+    const TRACK_LOCAL = "/assets/aistudio/Sport_Trap_Rock_by_Infraction__No_Copyright_Music__Training_Day_94db7219.mp3";
+    const TRACK_PRE = "https://ais-pre-zwfi6vte5jjtlgg44thcut-254477164520.asia-southeast1.run.app/assets/aistudio/Sport_Trap_Rock_by_Infraction__No_Copyright_Music__Training_Day_94db7219.mp3";
+    const TRACK_SRC = (window.location && window.location.hostname && window.location.hostname.indexOf("ais-") !== -1) ? TRACK_LOCAL : TRACK_PRE;
+
+    let actx = null, engine = null, noiseBuf = null, bgAudio = null, bgTrackFailed = false, lastHoof = 0, lastSynthBeat = 0, beatStep = 0;
+
+    function unlockAudio(){
+      try{
+        if(!actx){
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if(AC) actx = new AC();
+        }
+        if(actx && actx.state === "suspended") actx.resume().catch(function(){});
+      }catch(e){}
+      return actx;
+    }
+    function getBgTrack(){
+      if(bgTrackFailed) return null;
+      if(!bgAudio && typeof Audio !== "undefined"){
+        bgAudio = new Audio(TRACK_SRC);
+        bgAudio.loop = true;
+        bgAudio.preload = "auto";
+        bgAudio.volume = 0.42;
+        bgAudio.addEventListener("error", function(){ bgTrackFailed = true; });
+      }
+      return bgAudio;
+    }
+    function getNoise(ctx){
+      if(noiseBuf && noiseBuf.sampleRate === ctx.sampleRate) return noiseBuf;
+      const b = ctx.createBuffer(1, Math.floor(ctx.sampleRate*0.5), ctx.sampleRate), d = b.getChannelData(0);
+      for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+      noiseBuf = b; return b;
+    }
+    function playUi(kind, toggleOn){
+      if(state.muted) return;
+      const ctx = unlockAudio(); if(!ctx) return;
+      const t = ctx.currentTime;
+      if(kind==="select"){
+        [520,780].forEach(function(freq,i){
+          const o=ctx.createOscillator(), g=ctx.createGain(), st=t+i*0.038;
+          o.type="sine"; o.frequency.setValueAtTime(freq,st);
+          g.gain.setValueAtTime(0.001,st); g.gain.linearRampToValueAtTime(0.07,st+0.008); g.gain.exponentialRampToValueAtTime(0.001,st+0.075);
+          o.connect(g); g.connect(ctx.destination); o.start(st); o.stop(st+0.08);
+        });
+      } else if(kind==="toggle"){
+        const o=ctx.createOscillator(), g=ctx.createGain();
+        o.type="sine"; o.frequency.setValueAtTime(toggleOn?480:620,t); o.frequency.exponentialRampToValueAtTime(toggleOn?760:380,t+0.07);
+        g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(0.07,t+0.01); g.gain.exponentialRampToValueAtTime(0.001,t+0.08);
+        o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.085);
+      } else {
+        const o=ctx.createOscillator(), g=ctx.createGain();
+        o.type="triangle"; o.frequency.setValueAtTime(640,t); o.frequency.exponentialRampToValueAtTime(360,t+0.055);
+        g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(0.075,t+0.008); g.gain.exponentialRampToValueAtTime(0.001,t+0.06);
+        o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.065);
+      }
+    }
+    function stopAudio(){
+      if(bgAudio){ try{ bgAudio.pause(); bgAudio.currentTime=0; }catch(e){} }
+      if(engine && actx){
+        const e=engine; engine=null;
+        try{
+          e.g.gain.setTargetAtTime(0.0001, actx.currentTime, 0.04);
+          setTimeout(function(){ try{e.o1.stop();e.o2.stop();e.o1.disconnect();e.o2.disconnect();}catch(err){} }, 120);
+        }catch(err){}
+      }
+    }
+    function playHoof(nitro){
+      if(state.muted) return;
+      const ctx = unlockAudio(); if(!ctx) return;
+      const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+      o.type="sine"; o.frequency.setValueAtTime(nitro?148:118,t); o.frequency.exponentialRampToValueAtTime(48,t+0.085);
+      g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(nitro?0.15:0.11,t+0.01); g.gain.exponentialRampToValueAtTime(0.001,t+0.095);
+      o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.11);
+    }
+    function playSfx(kind){
+      if(kind==="start" && !state.muted && !state.musicMuted){
+        const tr=getBgTrack();
+        if(tr){ tr.currentTime=0; tr.volume=0.42; tr.play().catch(function(){ bgTrackFailed=true; }); }
+      }
+      if(state.muted) return;
+      const ctx = unlockAudio(); if(!ctx) return;
+      const t = ctx.currentTime;
+      if(kind==="start"){
+        [440,554.37,659.25].forEach(function(freq,i){
+          const o=ctx.createOscillator(), g=ctx.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, t+i*0.07);
+          g.gain.setValueAtTime(0.09, t+i*0.07); g.gain.exponentialRampToValueAtTime(0.001, t+i*0.07+0.16);
+          o.connect(g); g.connect(ctx.destination); o.start(t+i*0.07); o.stop(t+i*0.07+0.18);
+        });
+      } else if(kind==="nitro"){
+        if(state.vehicle==="car"){
+          const s=ctx.createBufferSource(); s.buffer=getNoise(ctx);
+          const f=ctx.createBiquadFilter(); f.type="bandpass"; f.frequency.setValueAtTime(240,t); f.frequency.exponentialRampToValueAtTime(980,t+0.35);
+          const g=ctx.createGain(); g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(0.16,t+0.05); g.gain.exponentialRampToValueAtTime(0.001,t+0.45);
+          s.connect(f); f.connect(g); g.connect(ctx.destination); s.start(t); s.stop(t+0.46);
+        } else { playHoof(true); }
+        [523.25,659.25,783.99,1046.5].forEach(function(freq,i){
+          const o=ctx.createOscillator(), g=ctx.createGain(); o.type="triangle"; o.frequency.setValueAtTime(freq,t+i*0.055);
+          g.gain.setValueAtTime(0.001,t+i*0.055); g.gain.exponentialRampToValueAtTime(0.1,t+i*0.055+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+i*0.055+0.18);
+          o.connect(g); g.connect(ctx.destination); o.start(t+i*0.055); o.stop(t+i*0.055+0.2);
+        });
+      } else if(kind==="wrong"){
+        const o=ctx.createOscillator(), g=ctx.createGain(); o.type="sawtooth"; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(85,t+0.28);
+        g.gain.setValueAtTime(0.1,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3); o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.32);
+      } else if(kind==="win"){
+        [523.25,659.25,783.99,1046.5,1318.51].forEach(function(freq,i){
+          const o=ctx.createOscillator(), g=ctx.createGain(); o.type="triangle"; o.frequency.setValueAtTime(freq,t+i*0.09);
+          g.gain.setValueAtTime(0.11,t+i*0.09); g.gain.exponentialRampToValueAtTime(0.001,t+i*0.09+0.3); o.connect(g); g.connect(ctx.destination); o.start(t+i*0.09); o.stop(t+i*0.09+0.32);
+        });
+      }
+    }
+    function updateAudio(nowMs){
+      const tr = getBgTrack();
+      if(!state.active || state.muted){
+        if(engine && actx) try{ engine.g.gain.setTargetAtTime(0.0001, actx.currentTime, 0.05); }catch(e){}
+        if(tr && !tr.paused) try{ tr.pause(); }catch(e){}
+        return;
+      }
+      if(tr){
+        if(state.musicMuted){
+          if(!tr.paused) try{ tr.pause(); }catch(e){}
+        } else {
+          tr.volume = state.status==="nitro" ? 0.55 : state.status==="stopped" ? 0.28 : 0.42;
+          if(tr.paused) tr.play().catch(function(){ bgTrackFailed=true; });
+        }
+      }
+      const ctx = unlockAudio(); if(!ctx || ctx.state === "suspended") return;
+      if(bgTrackFailed && !state.musicMuted && nowMs - lastSynthBeat >= 220){
+        lastSynthBeat = nowMs;
+        const bassNotes = [110, 110, 146.83, 130.81, 110, 164.81, 146.83, 123.47];
+        const freq = bassNotes[beatStep % bassNotes.length];
+        const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+        o.type="triangle"; o.frequency.setValueAtTime(freq,t);
+        g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(state.status==="nitro"?0.07:0.045,t+0.015); g.gain.exponentialRampToValueAtTime(0.001,t+0.19);
+        o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.2);
+        beatStep++;
+      }
+      if(state.vehicle==="car"){
+        if(!engine){
+          const o1=ctx.createOscillator(), o2=ctx.createOscillator(), f=ctx.createBiquadFilter(), g=ctx.createGain();
+          o1.type="sawtooth"; o2.type="triangle"; f.type="lowpass"; g.gain.setValueAtTime(0.0001,ctx.currentTime);
+          o1.connect(f); o2.connect(f); f.connect(g); g.connect(ctx.destination); o1.start(); o2.start();
+          engine={o1,o2,f,g};
+        }
+        const stop=state.status==="stopped"||state.speed<=1, nitro=state.status==="nitro";
+        const bf=stop?38:48+state.speed*0.52+(nitro?18:0);
+        engine.o1.frequency.setTargetAtTime(bf,ctx.currentTime,0.08);
+        engine.o2.frequency.setTargetAtTime(bf*1.98,ctx.currentTime,0.08);
+        engine.f.frequency.setTargetAtTime(stop?110:nitro?540:210+state.speed*1.4,ctx.currentTime,0.08);
+        engine.g.gain.setTargetAtTime(stop?0.012:nitro?0.07:0.04,ctx.currentTime,0.08);
+      } else {
+        if(engine) engine.g.gain.setTargetAtTime(0.0001,ctx.currentTime,0.04);
+        if(state.status!=="stopped" && state.speed>1){
+          const gap=state.status==="nitro"?165:Math.max(210,440-state.speed*2.2);
+          if(nowMs-lastHoof>=gap){ lastHoof=nowMs; playHoof(state.status==="nitro"); }
+        }
+      }
+    }
+
+    const TROPHY_META = {
+      easy: {
+        label: "Santai",
+        title: "Trofi Gangsa Sabit",
+        color: "#FDBA74",
+        border: "rgba(217,119,6,0.65)",
+        bg: "linear-gradient(135deg, rgba(120,53,15,0.9), #020617)",
+        flash: "radial-gradient(circle at 50% 32%, rgba(245,158,11,0.55), rgba(16,185,129,0.28) 52%, rgba(15,23,42,0) 85%)",
+        palette: ["#F59E0B","#FDE68A","#10B981","#FB923C","#F8FAFC"],
+        svg: '<svg class="float" viewBox="0 0 96 96" width="64" height="64"><circle cx="48" cy="44" r="34" fill="rgba(217,119,6,0.2)"/><path d="M28 28 H68 L63 50 C61 60 55 66 48 66 C41 66 35 60 33 50 Z" fill="#D97706" stroke="#FED7AA" stroke-width="2"/><path d="M28 32 C18 32 18 48 29 48" fill="none" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round"/><path d="M68 32 C78 32 78 48 67 48" fill="none" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round"/><rect x="44" y="66" width="8" height="10" fill="#B45309"/><rect x="33" y="76" width="30" height="7" rx="3" fill="#92400E" stroke="#FDBA74" stroke-width="1.5"/><path d="M52 38 A9 9 0 1 0 52 54 A7 7 0 1 1 52 38 Z" fill="#FEF3C7"/></svg>'
+      },
+      medium: {
+        label: "Sederhana",
+        title: "Trofi Perak Bintang",
+        color: "#7DD3FC",
+        border: "rgba(56,189,248,0.65)",
+        bg: "linear-gradient(135deg, rgba(12,74,110,0.9), #020617)",
+        flash: "radial-gradient(circle at 50% 32%, rgba(56,189,248,0.56), rgba(16,185,129,0.28) 52%, rgba(15,23,42,0) 85%)",
+        palette: ["#38BDF8","#E2E8F0","#34D399","#FBBF24","#818CF8"],
+        svg: '<svg class="float" viewBox="0 0 96 96" width="64" height="64"><circle cx="48" cy="44" r="36" fill="rgba(56,189,248,0.2)"/><path d="M25 26 H71 L65 51 C62 62 55 67 48 67 C41 67 34 62 31 51 Z" fill="#94A3B8" stroke="#E0F2FE" stroke-width="2"/><path d="M26 30 C14 29 14 48 28 50" fill="none" stroke="#38BDF8" stroke-width="3.5" stroke-linecap="round"/><path d="M70 30 C82 29 82 48 68 50" fill="none" stroke="#38BDF8" stroke-width="3.5" stroke-linecap="round"/><path d="M48 14 L51 20 L58 21 L53 25 L54 32 L48 29 L42 32 L43 25 L38 21 L45 20 Z" fill="#38BDF8" stroke="#E0F2FE" stroke-width="1.2"/><path d="M51 39 A8 8 0 1 0 51 53 A6.2 6.2 0 1 1 51 39 Z" fill="#0EA5E9"/><rect x="43" y="67" width="10" height="9" fill="#64748B"/><rect x="30" y="76" width="36" height="8" rx="3" fill="#1E293B" stroke="#94A3B8" stroke-width="1.6"/></svg>'
+      },
+      hard: {
+        label: "Pantas",
+        title: "Trofi Emas Diraja",
+        color: "#FDE047",
+        border: "rgba(250,204,21,0.8)",
+        bg: "linear-gradient(135deg, rgba(113,63,18,0.92), #020617)",
+        flash: "radial-gradient(circle at 50% 32%, rgba(250,204,21,0.6), rgba(16,185,129,0.32) 55%, rgba(15,23,42,0) 85%)",
+        palette: ["#FACC15","#10B981","#F43F5E","#38BDF8","#FEF08A","#FFFFFF"],
+        svg: '<svg class="float" viewBox="0 0 96 96" width="64" height="64"><circle cx="48" cy="44" r="38" fill="rgba(250,204,21,0.24)"/><path d="M16 34 L26 28 L28 45 L17 44 Z" fill="#FACC15" opacity="0.85"/><path d="M80 34 L70 28 L68 45 L79 44 Z" fill="#FACC15" opacity="0.85"/><path d="M29 22 L38 15 L48 22 L58 15 L67 22 L66 28 H30 Z" fill="#FDE047" stroke="#FEF9C3" stroke-width="1.4"/><path d="M27 28 H69 L63 52 C60 63 54 68 48 68 C42 68 36 63 33 52 Z" fill="#FACC15" stroke="#FEF9C3" stroke-width="2"/><path d="M27 32 C15 31 15 51 30 52" fill="none" stroke="#FEF08A" stroke-width="3.5" stroke-linecap="round"/><path d="M69 32 C81 31 81 51 66 52" fill="none" stroke="#FEF08A" stroke-width="3.5" stroke-linecap="round"/><path d="M51 38 A8.5 8.5 0 1 0 51 54 A6.5 6.5 0 1 1 51 38 Z" fill="#78350F"/><circle cx="48" cy="46" r="3.2" fill="#10B981" stroke="#FEF9C3" stroke-width="1"/><rect x="43" y="68" width="10" height="8" fill="#D97706"/><rect x="28" y="76" width="40" height="9" rx="3" fill="#78350F" stroke="#FACC15" stroke-width="1.8"/></svg>'
+      }
+    };
+    const LOSS_SUN_SVG = '<svg viewBox="0 0 64 64" width="46" height="46"><circle cx="32" cy="34" r="14" fill="#F59E0B" opacity="0.9"/><path d="M10 46 H54" stroke="#FB923C" stroke-width="3" stroke-linecap="round"/></svg>';
+
+    let confettiRaf = 0, confettiPieces = [];
+    const $ = function(id){ return document.getElementById(id); };
+
+    function stopCelebration(){
+      if(confettiRaf){ cancelAnimationFrame(confettiRaf); confettiRaf = 0; }
+      confettiPieces = [];
+      const fl = $("lkr-victory-flash"), cc = $("lkr-confetti");
+      if(fl){ fl.className = "lkr-victory-flash"; fl.style.background = ""; }
+      if(cc){ cc.className = ""; const cctx = cc.getContext("2d"); if(cctx) cctx.clearRect(0,0,cc.width,cc.height); }
+    }
+
+    function startCelebration(diffKey){
+      stopCelebration();
+      const meta = TROPHY_META[diffKey] || TROPHY_META.medium;
+      const fl = $("lkr-victory-flash"), cc = $("lkr-confetti"), app = $("lkr-app");
+      if(fl){ fl.style.background = meta.flash; fl.className = "lkr-victory-flash show"; }
+      if(!cc || !app) return;
+      const cctx = cc.getContext("2d"); if(!cctx) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = app.clientWidth || 640, h = app.clientHeight || 500;
+      cc.width = Math.floor(w * dpr); cc.height = Math.floor(h * dpr);
+      cctx.setTransform(dpr,0,0,dpr,0,0);
+      cc.className = "show";
+      function burst(n, yRatio){
+        for(let i=0;i<n;i++){
+          const left = i % 2 === 0;
+          const ox = left ? w * (0.15 + Math.random()*0.25) : w * (0.6 + Math.random()*0.25);
+          const ang = -Math.PI/2 + (Math.random()-0.5)*1.15;
+          const spd = 4.2 + Math.random()*7.5;
+          confettiPieces.push({
+            x:ox, y:h*yRatio, vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd-1.2,
+            s:5+Math.random()*5, a:0.45+Math.random()*0.55, r:Math.random()*6.28, vr:(Math.random()-0.5)*0.22,
+            c:meta.palette[i % meta.palette.length], al:1, sw:Math.random()*6.28
+          });
+        }
+      }
+      burst(75, 0.56);
+      setTimeout(function(){ if(state.view==="summary") burst(55, 0.34); }, 420);
+      const t0 = performance.now();
+      function stepConfetti(now){
+        const el = now - t0;
+        cctx.clearRect(0,0,w,h);
+        for(let i=confettiPieces.length-1;i>=0;i--){
+          const p = confettiPieces[i];
+          p.sw += 0.08; p.vx *= 0.99; p.vy += 0.16; p.x += p.vx + Math.sin(p.sw)*0.65; p.y += p.vy; p.r += p.vr;
+          if(el > 3000) p.al = Math.max(0, p.al - 0.022);
+          if(p.al <= 0 || p.y > h + 24){ confettiPieces.splice(i,1); continue; }
+          cctx.save(); cctx.globalAlpha = p.al; cctx.translate(p.x,p.y); cctx.rotate(p.r);
+          cctx.fillStyle = p.c; cctx.fillRect(-p.s/2, -p.s*p.a/2, p.s, p.s*p.a); cctx.restore();
+        }
+        if(confettiPieces.length > 0 && el < 5200 && state.view === "summary"){
+          confettiRaf = requestAnimationFrame(stepConfetti);
+        } else {
+          cctx.clearRect(0,0,w,h);
+          confettiRaf = 0;
+        }
+      }
+      confettiRaf = requestAnimationFrame(stepConfetti);
+    }
+
+    function showView(v){
+      if(v !== "summary") stopCelebration();
+      state.view = v;
+      $("view-menu").style.display = v==="menu" ? "flex" : "none";
+      $("view-play").style.display = v==="play" ? "flex" : "none";
+      $("view-summary").style.display = v==="summary" ? "flex" : "none";
+      $("view-board").style.display = v==="board" ? "flex" : "none";
+      $("view-notes").style.display = v==="notes" ? "flex" : "none";
+      $("nav-arena").className = (v!=="board" && v!=="notes") ? "active" : "";
+      $("nav-board").className = v==="board" ? "active" : "";
+      $("nav-notes").className = v==="notes" ? "active" : "";
+      $("header-cta").textContent = v==="play" ? "Tamat Lumba" : "Mula Lumba";
+    }
+
+    function renderCarOptions(){
+      const wrap = $("lkr-cars"); wrap.innerHTML = "";
+      CARS.forEach(function(c){
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "lkr-car-card" + (state.vehicle==="car" && state.carId===c.id ? " active" : "");
+
+        const fb = document.createElement("div");
+        fb.className = "lkr-car-fallback";
+        fb.textContent = c.name;
+
+        const img = document.createElement("img");
+        img.src = c.imageUrl;
+        img.alt = c.name;
+        img.referrerPolicy = "no-referrer";
+        img.addEventListener("error", function(){ img.style.display = "none"; });
+
+        const cap = document.createElement("div");
+        cap.className = "cap";
+        cap.textContent = c.name;
+
+        btn.appendChild(fb);
+        btn.appendChild(img);
+        btn.appendChild(cap);
+        btn.addEventListener("click", function(){
+          unlockAudio();
+          playUi("select");
+          state.vehicle="car"; state.carId=c.id; renderCarOptions();
+        });
+        wrap.appendChild(btn);
+      });
+      $("lkr-camel-btn").className = "lkr-camel-btn" + (state.vehicle==="camel" ? " active" : "");
+      $("lkr-camel-check").style.display = state.vehicle==="camel" ? "inline" : "none";
+    }
+
+    function loadLeaderboard(){
+      try{
+        const parsed = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+        if(Array.isArray(parsed) && parsed.length) return parsed;
+      }catch(e){}
+      return memoryBoard;
+    }
+
+    function renderLeaderboard(){
+      const all = loadLeaderboard();
+      const list = state.boardFilter === "all" ? all : all.filter(function(e){ return e.vehicle === state.boardFilter; });
+      if(!list.length){
+        $("board-body").innerHTML = '<tr><td colspan="6" style="text-align:center;color:#94A3B8;padding:18px;">Tiada rekod untuk kategori ini.</td></tr>';
+        return;
+      }
+      $("board-body").innerHTML = list.slice(0,10).map(function(e,i){
+        const diffLabel = e.difficulty==="easy"?"Santai":e.difficulty==="hard"?"Pantas":"Sederhana";
+        return '<tr><td style="color:#FBBF24;font-weight:700;">#'+(i+1)+'</td><td>'+e.playerName+'</td><td>'+(e.vehicle==="car"?(e.carName||"Kereta Sport"):"Unta Gurun")+'</td><td>'+diffLabel+'</td><td>'+e.accuracy+'%</td><td style="text-align:right;font-weight:700;color:#FDE68A;">'+e.score+'</td></tr>';
+      }).join("");
+    }
+
+    function renderQuestion(){
+      const q = state.deck[state.qIdx]; if(!q) return;
+      state.answered = false;
+      $("q-meta").textContent = "Soalan " + (state.qIdx+1) + " · " + q.category;
+      $("q-status").textContent = state.status==="nitro" ? "Kuasa Nitro Aktif!" : state.status==="stopped" ? "Terhenti 2s" : "Tekan A-D / 1-4";
+      $("q-text").textContent = q.question;
+      $("q-fb").textContent = "Jawab betul untuk kuasa Nitro · Jawab salah terhenti 2 saat";
+      $("q-fb").style.color = "#475569";
+      const opts = $("q-opts"); opts.innerHTML = "";
+      ["A","B","C","D"].forEach(function(key, idx){
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "lkr-opt";
+        b.innerHTML = '<span class="lkr-opt-key">'+key+'</span><span>'+q.options[idx]+'</span>';
+        b.addEventListener("click", function(){ handleAnswer(idx); });
+        opts.appendChild(b);
+      });
+    }
+
+    function handleAnswer(idx){
+      if(!state.active || state.answered) return;
+      unlockAudio();
+      const q = state.deck[state.qIdx]; state.answered = true;
+      $("q-opts").querySelectorAll("button").forEach(function(b,i){
+        b.disabled = true;
+        if(i===q.correctIndex) b.classList.add("correct");
+        else if(i===idx) b.classList.add("wrong");
+      });
+      if(idx===q.correctIndex){
+        state.correct++; state.streak++; state.bestStreak = Math.max(state.bestStreak, state.streak);
+        state.speed = NITRO_SPEED + Math.min((state.streak-1)*6, 24);
+        state.topSpeed = Math.max(state.topSpeed, state.speed);
+        state.status = "nitro"; state.statusTimer = 2.6;
+        $("q-fb").textContent = "Betul! Pecutan Nitro: " + q.explanation;
+        $("q-fb").style.color = "#065F46";
+        playSfx("nitro");
+      } else {
+        state.wrong++; state.streak = 0; state.speed = 0; state.status = "stopped"; state.statusTimer = 2.0;
+        $("q-fb").textContent = "Salah! Berhenti 2s: " + q.explanation;
+        $("q-fb").style.color = "#991B1B";
+        playSfx("wrong");
+      }
+      setTimeout(function(){
+        if(!state.active) return;
+        state.qIdx = (state.qIdx+1) % state.deck.length;
+        renderQuestion();
+      }, 1100);
+    }
+
+    function finishRace(winner){
+      state.active = false; stopAudio();
+      const total = state.correct + state.wrong, acc = total ? Math.round((state.correct/total)*100) : 0;
+      const score = Math.max(0, Math.round((state.playerDist*0.5 + state.correct*85 - state.wrong*15 + (total?(state.correct/total)*250:0) + state.bestStreak*30 + (winner==="player"?450+state.timeRem*16:0))*DIFF_CFG[state.diff].mult));
+      const carObj = CARS.find(function(c){ return c.id===state.carId; }) || CARS[0];
+      const entry = {
+        id:"run-"+Date.now(),
+        playerName:($("lkr-name").value.trim()||"Pelumba Tetamu"),
+        vehicle:state.vehicle,
+        carName:state.vehicle==="car"?carObj.name:undefined,
+        difficulty:state.diff,
+        score:score,
+        accuracy:acc,
+        timeRemaining:Number(state.timeRem.toFixed(1)),
+        won:winner==="player"
+      };
+      memoryBoard = [entry].concat(loadLeaderboard()).sort(function(a,b){ return b.score-a.score; }).slice(0,25);
+      try{ localStorage.setItem(STORE_KEY, JSON.stringify(memoryBoard)); }catch(e){}
+
+      const tMeta = TROPHY_META[state.diff] || TROPHY_META.medium;
+      const won = winner === "player";
+      $("view-summary").className = won ? "lkr-panel won" : "lkr-panel";
+      const tBox = $("sum-trophy");
+      if(won){
+        tBox.className = "lkr-trophy-box pop";
+        tBox.style.borderColor = tMeta.border;
+        tBox.style.background = tMeta.bg;
+        tBox.innerHTML = tMeta.svg;
+      } else {
+        tBox.className = "lkr-trophy-box";
+        tBox.style.borderColor = "#334155";
+        tBox.style.background = "#020617";
+        tBox.innerHTML = LOSS_SUN_SVG;
+      }
+      $("sum-sub").style.color = won ? tMeta.color : "#FBBF24";
+      $("sum-sub").textContent = entry.playerName + " · " + (state.vehicle==="car"?carObj.name:"Unta Gurun") + " · Tahap " + tMeta.label + (won ? " · " + tMeta.title : "");
+      $("sum-title").textContent = won ? "Tahniah! Anda Menjuarai Perlumbaan!" : winner==="ai" ? "AI Senja Mendahului di Garisan Penamat" : "Matahari Telah Terbenam";
+      $("sum-desc").textContent = won ? "Anda menewaskan AI Senja dengan baki " + state.timeRem.toFixed(1) + "s sebelum Maghrib." : "Cuba tingkatkan ketepatan jawapan untuk memecut dengan kuasa Nitro.";
+      $("sum-score").textContent = score.toLocaleString();
+      $("sum-acc").textContent = acc + "%";
+      $("sum-top").textContent = Math.round(state.topSpeed) + " km/j";
+      $("sum-rem").textContent = state.timeRem.toFixed(1) + "s";
+      showView("summary");
+      if(won){ playSfx("win"); startCelebration(state.diff); }
+    }
+
+    const canvas = $("lkr-canvas"), ctx = canvas.getContext("2d"), particles = [];
+    let tick = 0, lastTs = performance.now();
+
+    function drawCar(x, y, isPlayer, speed, carId, sunsetProgress){
+      const isNitro = isPlayer && state.status==="nitro";
+      let nx=0, ny=0, tilt=0;
+      if(isNitro){
+        if(carId==="car-gt"){ ny=Math.sin(tick*0.28)*2.2; tilt=-0.07+Math.sin(tick*0.45)*0.025; }
+        else if(carId==="car-drift"){ nx=3; tilt=-0.055; }
+        else if(carId==="car-ferrari"){ nx=Math.sin(tick*0.5)*3.4+2; tilt=-0.04; }
+        else if(carId==="car-hyper"){ nx=Math.cos(tick*1.1)*1.3; ny=Math.sin(tick*1.2)*1.6; tilt=-0.065; }
+      }
+      ctx.save(); ctx.translate(x+nx, y+ny);
+      ctx.scale(isPlayer?1.15:0.96, isPlayer?1.15:0.96);
+      ctx.translate(0, speed>5 ? Math.sin(tick*0.35)*(isNitro?1.6:0.9) : 0);
+      if(tilt!==0) ctx.rotate(tilt);
+      ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.beginPath(); ctx.ellipse(0,17,46,7,0,0,Math.PI*2); ctx.fill();
+
+      if(isNitro){
+        ctx.save(); ctx.globalCompositeOperation="lighter";
+        if(carId==="car-gt"){
+          ctx.fillStyle="rgba(34,211,238,0.75)"; ctx.beginPath(); ctx.ellipse(0,14,42,4.5,0,0,Math.PI*2); ctx.fill();
+        } else if(carId==="car-drift"){
+          for(let r=0;r<3;r++){
+            const wp=(tick*0.14+r*0.33)%1;
+            ctx.strokeStyle="rgba(56,189,248,"+((1-wp)*0.72)+")"; ctx.lineWidth=2;
+            ctx.beginPath(); ctx.arc(26-wp*84,-4,16+wp*16,Math.PI*0.65,Math.PI*1.35); ctx.stroke();
+          }
+        } else if(carId==="car-ferrari"){
+          ctx.strokeStyle="rgba(239,68,68,0.78)"; ctx.lineWidth=2;
+          for(let s=0;s<3;s++){
+            const sx=-40-((tick*6+s*14)%34);
+            ctx.beginPath(); ctx.moveTo(sx,-13+s*9); ctx.lineTo(sx-22,-13+s*9); ctx.stroke();
+          }
+        } else if(carId==="car-hyper" && tick%7<3){
+          ctx.fillStyle="rgba(251,146,60,0.68)"; ctx.beginPath(); ctx.arc(-48,4,13,0,Math.PI*2); ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      if(isPlayer && speed>15){
+        const smokeCount = isNitro ? 5 : 2;
+        for(let si=0;si<smokeCount;si++){
+          const cy = (tick*(isNitro?0.32:0.16)+si*1.4)%5;
+          const sx = -30-cy*10, sy = 10-cy*2.2, sr = 4.5+cy*(isNitro?2.2:1.4), al = Math.max(0,0.45-cy*0.09);
+          ctx.fillStyle = (isNitro && carId==="car-gt") ? "rgba(186,230,253,"+al+")" : "rgba(203,213,225,"+al+")";
+          ctx.beginPath(); ctx.arc(sx,sy,sr,0,Math.PI*2); ctx.fill();
+          if(isNitro && si%2===0){
+            ctx.fillStyle = carId==="car-gt" ? "rgba(34,211,238,0.9)" : carId==="car-drift" ? "rgba(250,204,21,0.85)" : "rgba(249,115,22,0.85)";
+            ctx.fillRect(sx-2, sy+2, 4, 1.5);
+          }
+        }
+      }
+
+      if((sunsetProgress>0.25 && speed>0) || (isNitro && carId==="car-ferrari")){
+        const ba = (isNitro && carId==="car-ferrari") ? 0.52 : Math.min(0.42,(sunsetProgress-0.25)*0.55);
+        const bg = ctx.createLinearGradient(44,0,165,0);
+        bg.addColorStop(0,"rgba(254,240,138,"+ba+")"); bg.addColorStop(1,"rgba(254,240,138,0)");
+        ctx.fillStyle=bg; ctx.beginPath(); ctx.moveTo(44,-2); ctx.lineTo(165,-20); ctx.lineTo(165,18); ctx.lineTo(44,6); ctx.closePath(); ctx.fill();
+      }
+
+      if(carId==="car-gt"){
+        ctx.fillStyle="#F8FAFC"; ctx.beginPath(); ctx.moveTo(-44,10); ctx.lineTo(-45,-6); ctx.lineTo(-26,-9); ctx.lineTo(-14,-21); ctx.lineTo(14,-21); ctx.lineTo(30,-8); ctx.lineTo(46,-5); ctx.lineTo(48,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle="#CBD5E1"; ctx.fillRect(-44,4,92,6);
+        ctx.fillStyle="#0F172A"; ctx.beginPath(); ctx.moveTo(-22,-8); ctx.lineTo(-12,-19); ctx.lineTo(13,-19); ctx.lineTo(26,-8); ctx.closePath(); ctx.fill();
+        ctx.fillStyle="#E2E8F0"; ctx.fillRect(-2,-19,3,11);
+        ctx.fillStyle="#FEF08A"; ctx.fillRect(42,-4,5,5);
+        ctx.fillStyle="#DC2626"; ctx.fillRect(-45,-4,4,6);
+      } else if(carId==="car-drift"){
+        ctx.fillStyle="#0F172A"; ctx.fillRect(-41,-19,3,12);
+        ctx.save(); ctx.translate(-40,-20); if(isNitro) ctx.rotate(0.24);
+        ctx.fillStyle=isNitro?"#38BDF8":"#0284C7"; ctx.fillRect(-9,-3,16,4); ctx.restore();
+        ctx.fillStyle="#0EA5E9"; ctx.beginPath(); ctx.moveTo(-43,10); ctx.lineTo(-44,-5); ctx.quadraticCurveTo(-30,-11,-17,-20); ctx.quadraticCurveTo(-2,-25,14,-18); ctx.quadraticCurveTo(30,-10,46,-2); ctx.lineTo(47,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle="#0369A1"; ctx.fillRect(-43,3,90,7);
+        ctx.fillStyle="#0F172A"; ctx.beginPath(); ctx.moveTo(-20,-8); ctx.quadraticCurveTo(-8,-20,9,-17); ctx.lineTo(23,-8); ctx.closePath(); ctx.fill();
+        ctx.fillStyle="#FEF9C3"; ctx.beginPath(); ctx.ellipse(40,-3,5,3,-0.3,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle="#EF4444"; ctx.fillRect(-45,-4,6,3);
+      } else if(carId==="car-ferrari"){
+        ctx.fillStyle="#F8FAFC"; ctx.fillRect(-45,-22,12,4); ctx.fillRect(-44,-19,4,14);
+        ctx.beginPath(); ctx.moveTo(-44,10); ctx.lineTo(-45,-6); ctx.lineTo(-20,-8); ctx.lineTo(-6,-20); ctx.lineTo(13,-20); ctx.lineTo(31,-9); ctx.lineTo(48,-1); ctx.lineTo(48,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle="#0F172A"; ctx.fillRect(-44,6,94,4);
+        ctx.fillStyle="#DC2626"; ctx.beginPath(); ctx.arc(-2,0,5.2,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle="#0F172A"; ctx.beginPath(); ctx.moveTo(-14,-7); ctx.lineTo(-4,-18); ctx.lineTo(12,-18); ctx.lineTo(26,-7); ctx.closePath(); ctx.fill();
+        if(isNitro){
+          ctx.fillStyle=tick%4<2?"#EF4444":"#FCA5A5"; ctx.fillRect(-34,-7,12,3);
+          ctx.fillStyle="#FFFFFF"; ctx.fillRect(40,-10,5,4);
+        }
+        ctx.fillStyle="#FEF08A"; ctx.fillRect(41,-3,6,4);
+        ctx.fillStyle="#DC2626"; ctx.beginPath(); ctx.arc(-44,-1,3,0,Math.PI*2); ctx.fill();
+      } else if(carId==="car-hyper"){
+        ctx.fillStyle="#0F172A"; ctx.fillRect(-43,-20,3,13);
+        ctx.fillStyle="#DC2626"; ctx.fillRect(-47,-22,14,4);
+        ctx.beginPath(); ctx.moveTo(-44,10); ctx.lineTo(-45,-6); ctx.lineTo(-25,-9); ctx.lineTo(-12,-21); ctx.lineTo(15,-21); ctx.lineTo(31,-8); ctx.lineTo(47,-3); ctx.lineTo(48,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle="#991B1B"; ctx.fillRect(-44,3,92,4);
+        ctx.fillStyle="#0F172A"; ctx.fillRect(27,-9,7,2); ctx.fillRect(-44,7,93,3);
+        if(isNitro && tick%5<3){ ctx.fillStyle="#FACC15"; ctx.beginPath(); ctx.moveTo(27,-9); ctx.lineTo(16,-14); ctx.lineTo(31,-9); ctx.closePath(); ctx.fill(); }
+        ctx.fillStyle="#0F172A";
+        ctx.beginPath(); ctx.moveTo(-21,-8); ctx.lineTo(-10,-19); ctx.lineTo(14,-19); ctx.lineTo(26,-8); ctx.closePath(); ctx.fill();
+        ctx.fillStyle="#FEF08A"; ctx.fillRect(42,-2,6,4);
+        ctx.fillStyle="#F87171"; ctx.fillRect(-45,-4,4,5);
+      } else {
+        ctx.fillStyle="#334155"; ctx.beginPath(); ctx.moveTo(-40,10); ctx.lineTo(-42,-4); ctx.lineTo(-24,-8); ctx.lineTo(-10,-20); ctx.lineTo(16,-20); ctx.lineTo(33,-7); ctx.lineTo(44,-2); ctx.lineTo(44,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle="#0F172A"; ctx.beginPath(); ctx.moveTo(-18,-7); ctx.lineTo(-8,-16); ctx.lineTo(14,-16); ctx.lineTo(26,-7); ctx.closePath(); ctx.fill();
+        ctx.fillStyle="#FEF08A"; ctx.fillRect(40,-3,5,4);
+      }
+
+      const wRot = (tick*speed*0.008)%(Math.PI*2);
+      const rim = carId==="car-ferrari"?"#1E293B":carId==="car-drift"?"#94A3B8":carId==="car-hyper"?"#FACC15":"#CBD5E1";
+      [-25,26].forEach(function(wx){
+        ctx.save(); ctx.translate(wx,10);
+        ctx.fillStyle="#090D16"; ctx.beginPath(); ctx.arc(0,0,9.5,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle=rim; ctx.beginPath(); ctx.arc(0,0,5.2,0,Math.PI*2); ctx.fill();
+        if(carId==="car-drift"||carId==="car-hyper"){ ctx.fillStyle=carId==="car-drift"?"#FACC15":"#EF4444"; ctx.fillRect(-4,-1.5,2,3); }
+        ctx.rotate(wRot); ctx.strokeStyle=carId==="car-ferrari"?"#94A3B8":"#1E293B"; ctx.lineWidth=1.4;
+        ctx.beginPath(); ctx.moveTo(-4.2,0); ctx.lineTo(4.2,0); ctx.moveTo(0,-4.2); ctx.lineTo(0,4.2); ctx.stroke();
+        ctx.restore();
+      });
+      ctx.font="700 10px sans-serif"; ctx.textAlign="center"; ctx.fillStyle=isPlayer?"#FDE68A":"#CBD5E1";
+      ctx.fillText(isPlayer?"ANDA":"AI",0,-27);
+      ctx.restore();
+    }
+
+    function drawCamel(x, y, isPlayer, speed){
+      const isNitro = isPlayer && state.status==="nitro";
+      ctx.save(); ctx.translate(x, y);
+      const gallop = speed>2 ? Math.sin(tick*(isNitro?0.52:0.35)) : 0;
+      ctx.translate(0, speed>2 ? Math.abs(gallop)*-3.5 : 1);
+      if(isNitro){
+        ctx.strokeStyle="rgba(251,191,36,0.78)"; ctx.lineWidth=2.2;
+        for(let i=0;i<3;i++){ const off=(tick*5+i*16)%40; ctx.beginPath(); ctx.moveTo(-30-off,-12+i*9); ctx.lineTo(-56-off,-12+i*9); ctx.stroke(); }
+      }
+      const coat=isPlayer?"#D97706":"#A16207", saddle=isPlayer?"#059669":"#334155";
+      ctx.fillStyle = coat;
+      ctx.beginPath(); ctx.moveTo(-22,3); ctx.quadraticCurveTo(-2,-26,10,-10); ctx.quadraticCurveTo(22,-8,22,2); ctx.quadraticCurveTo(0,10,-22,3); ctx.fill();
+      ctx.fillStyle=saddle; ctx.beginPath(); ctx.moveTo(-12,-11); ctx.quadraticCurveTo(-2,-22,8,-11); ctx.lineTo(9,-3); ctx.lineTo(-13,-3); ctx.closePath(); ctx.fill();
+      ctx.fillStyle="#FBBF24"; ctx.fillRect(-11,-6,19,2.5);
+      ctx.strokeStyle=coat; ctx.lineWidth=7; ctx.beginPath(); ctx.moveTo(18,-1); ctx.quadraticCurveTo(27,-11,29,-22); ctx.stroke();
+      ctx.fillStyle=coat; ctx.beginPath(); ctx.ellipse(33,-23,7.5,4.5,0.1,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="#0F172A"; ctx.beginPath(); ctx.arc(34,-24.2,1.2,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle=coat; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(-14,3); ctx.lineTo(-14+gallop*9,17); ctx.moveTo(16,3); ctx.lineTo(16-gallop*9,17); ctx.stroke();
+      ctx.font="700 10px sans-serif"; ctx.textAlign="center"; ctx.fillStyle=isPlayer?"#FDE68A":"#CBD5E1";
+      ctx.fillText(isPlayer?"ANDA":"AI",0,-34);
+      ctx.restore();
+    }
+
+    function updatePlayBadges(){
+      const carObj = CARS.find(function(c){ return c.id===state.carId; }) || CARS[0];
+      const badge = $("car-badge");
+      if(state.vehicle==="car"){
+        badge.className = "lkr-car-badge show";
+        $("car-badge-img").src = carObj.imageUrl;
+        $("car-badge-name").textContent = carObj.name;
+      } else {
+        badge.className = "lkr-car-badge";
+      }
+
+      const nCard = $("nitro-card");
+      if(state.status==="nitro"){
+        nCard.className = "lkr-nitro-card show";
+        if(state.vehicle==="car"){
+          $("nitro-img-wrap").style.display = "block";
+          $("nitro-car-img").src = carObj.imageUrl;
+          $("nitro-title-txt").textContent = "NITRO · " + carObj.name;
+        } else {
+          $("nitro-img-wrap").style.display = "none";
+          $("nitro-title-txt").textContent = "PECUTAN UNTA AKTIF!";
+        }
+        $("nitro-speed-txt").textContent = Math.round(state.speed) + " km/j";
+      } else {
+        nCard.className = "lkr-nitro-card";
+      }
+    }
+
+    function loop(now){
+      tick++;
+      const dt = Math.min(0.05, (now-lastTs)/1000); lastTs = now;
+      if(state.active){
+        if(state.status!=="normal"){
+          state.statusTimer -= dt;
+          if(state.statusTimer<=0){ state.status="normal"; state.speed=BASE_SPEED; }
+        }
+        state.playerDist += state.speed*SPEED_TO_MPS*dt;
+        state.bgOffset += state.speed*dt*4.2;
+        state.aiDist += DIFF_CFG[state.diff].ai*SPEED_TO_MPS*dt;
+        state.timeRem = Math.max(0, state.timeRem-dt);
+        updateAudio(now);
+
+        $("hud-time").textContent = state.timeRem.toFixed(1)+"s";
+        $("hud-speed").textContent = Math.round(state.speed)+" km/j";
+        $("hud-dist").textContent = Math.round(state.playerDist)+"m / "+Math.round(state.aiDist)+"m";
+        updatePlayBadges();
+
+        if(state.playerDist>=FINISH_DIST) finishRace("player");
+        else if(state.aiDist>=FINISH_DIST) finishRace("ai");
+        else if(state.timeRem<=0) finishRace("sunset");
+      }
+
+      if(state.view==="play"){
+        const dpr = Math.min(window.devicePixelRatio||1, 2), w=canvas.clientWidth, h=canvas.clientHeight;
+        if(w>0 && h>0){
+          if(canvas.width!==Math.floor(w*dpr) || canvas.height!==Math.floor(h*dpr)){
+            canvas.width=Math.floor(w*dpr); canvas.height=Math.floor(h*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
+          }
+          const sp=Math.max(0,Math.min(1,1-state.timeRem/Math.max(1,state.totalTime))), hy=h*0.5;
+          const sky=ctx.createLinearGradient(0,0,0,hy);
+          sky.addColorStop(0,sp>0.6?"#0F172A":"#1E293B"); sky.addColorStop(1,sp>0.6?"#9A3412":"#F59E0B");
+          ctx.fillStyle=sky; ctx.fillRect(0,0,w,hy+4);
+
+          ctx.fillStyle="rgba(255,255,255,"+(0.12+sp*0.78)+")";
+          for(let s=0;s<18;s++){ ctx.fillRect((s*137+30)%w, (s*47+12)%(hy*0.65), 1.5, 1.5); }
+
+          const mx=w*0.86, my=h*0.14;
+          ctx.fillStyle="#FDE68A"; ctx.beginPath(); ctx.arc(mx,my,12,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle=sp>0.6?"#0F172A":"#1E293B"; ctx.beginPath(); ctx.arc(mx+5,my-3,10,0,Math.PI*2); ctx.fill();
+
+          const sunY=hy*0.32+(hy*0.78)*sp;
+          ctx.fillStyle="#FDE047"; ctx.beginPath(); ctx.arc(w*0.52,sunY,22,0,Math.PI*2); ctx.fill();
+
+          const farX=(state.bgOffset*0.2)%240;
+          ctx.fillStyle="#78350F"; ctx.beginPath(); ctx.moveTo(0,hy+12);
+          for(let x=-240;x<=w+240;x+=120) ctx.quadraticCurveTo(x-farX+60,hy-24,x-farX+120,hy+4);
+          ctx.lineTo(w,h); ctx.lineTo(0,h); ctx.closePath(); ctx.fill();
+
+          const mShift=(state.bgOffset*0.18)%560;
+          ctx.fillStyle="#451A03";
+          for(let mx2=-560;mx2<w+560;mx2+=560){
+            const bx=mx2-mShift+220, by=hy-2;
+            ctx.beginPath(); ctx.arc(bx,by-10,13,Math.PI,0); ctx.fill();
+            ctx.fillRect(bx-16,by-10,32,12);
+            ctx.fillRect(bx+18,by-26,5,28);
+          }
+
+          const roadTop=hy+10, roadH=h-roadTop;
+          ctx.fillStyle="#1E293B"; ctx.fillRect(0,roadTop,w,roadH);
+          ctx.fillStyle="#F59E0B"; ctx.fillRect(0,roadTop,w,2);
+          const dash=state.bgOffset%64; ctx.fillStyle="rgba(248,250,252,0.5)";
+          for(let dx=-64;dx<w+64;dx+=64) ctx.fillRect(dx-dash,roadTop+roadH*0.48,34,3);
+
+          const lShift=state.bgOffset%200;
+          for(let lx=-200;lx<w+200;lx+=200){
+            const x=lx-lShift+50;
+            ctx.fillStyle="#475569"; ctx.fillRect(x,roadTop-16,2,16);
+            ctx.fillStyle="#F59E0B"; ctx.beginPath(); ctx.arc(x+1,roadTop-18,3.5,0,Math.PI*2); ctx.fill();
+          }
+
+          const px=Math.max(85,w*0.22), finX=px+(FINISH_DIST-state.playerDist)*5.8;
+          if(finX>-40 && finX<w+40){
+            ctx.fillStyle="#F8FAFC"; ctx.fillRect(finX,roadTop,10,roadH);
+            ctx.fillStyle="#F59E0B"; ctx.fillRect(finX-24,roadTop-18,58,16);
+            ctx.fillStyle="#0F172A"; ctx.font="700 9px sans-serif"; ctx.textAlign="center"; ctx.fillText("PENAMAT",finX+5,roadTop-7);
+          }
+          const aiY=roadTop+roadH*0.26, plY=roadTop+roadH*0.72, emitX=state.vehicle==="car"?px-52:px-24, emitY=plY+2, dustY=state.vehicle==="car"?plY+12:plY+17;
+          const aiX=px+(state.aiDist-state.playerDist)*5.8;
+          if(state.speed>=30){
+            const hs=state.status==="nitro"||state.speed>=75;
+            const dc=hs?3:(tick%2===0?1:0);
+            for(let d=0;d<dc;d++) particles.push({k:"dust",x:emitX+(Math.random()-0.5)*12,y:dustY+(Math.random()-0.5)*5,vx:-(state.speed*0.06)-Math.random()*2,vy:-0.3-Math.random()*1,r:hs?6+Math.random()*6:4+Math.random()*3.5,l:hs?24:18,m:hs?24:18});
+            for(let g=0;g<(hs?3:1);g++) particles.push({k:"grain",x:emitX+4,y:dustY+1,vx:-(state.speed*0.085)-Math.random()*4,vy:-1-Math.random()*1.8,r:1.3+Math.random()*1.2,l:15,m:15});
+          }
+          if(aiX>=-50 && aiX<=w+50 && DIFF_CFG[state.diff].ai>=45 && tick%2===0){
+            particles.push({k:"dust",x:(state.vehicle==="car"?aiX-42:aiX-22),y:(state.vehicle==="car"?aiY+10:aiY+16),vx:-3.2,vy:-0.4,r:4.5+Math.random()*3,l:18,m:18});
+          }
+          const tint = state.vehicle==="camel"?"amber":state.carId==="car-gt"?"cyan":state.carId==="car-drift"?"cobalt":state.carId==="car-ferrari"?"crimson":"amber";
+          if(state.status==="nitro"){
+            ctx.save(); ctx.globalCompositeOperation="lighter";
+            const grad=ctx.createLinearGradient(emitX,emitY,emitX-85,emitY);
+            if(tint==="cyan"){ grad.addColorStop(0,"rgba(236,254,255,0.92)"); grad.addColorStop(0.5,"rgba(34,211,238,0.7)"); grad.addColorStop(1,"rgba(14,165,233,0)"); }
+            else if(tint==="cobalt"){ grad.addColorStop(0,"rgba(254,249,195,0.92)"); grad.addColorStop(0.5,"rgba(56,189,248,0.72)"); grad.addColorStop(1,"rgba(29,78,216,0)"); }
+            else if(tint==="crimson"){ grad.addColorStop(0,"rgba(254,240,138,0.94)"); grad.addColorStop(0.5,"rgba(239,68,68,0.76)"); grad.addColorStop(1,"rgba(185,28,28,0)"); }
+            else { grad.addColorStop(0,"rgba(254,249,195,0.9)"); grad.addColorStop(0.5,"rgba(249,115,22,0.65)"); grad.addColorStop(1,"rgba(239,68,68,0)"); }
+            ctx.fillStyle=grad; ctx.beginPath(); ctx.moveTo(emitX,emitY-7); ctx.lineTo(emitX-85,emitY); ctx.lineTo(emitX,emitY+7); ctx.closePath(); ctx.fill();
+            ctx.restore();
+            for(let i=0;i<4;i++) particles.push({k:"flame",t:tint,x:emitX,y:emitY+(Math.random()-0.5)*8,vx:-5-Math.random()*5,vy:(Math.random()-0.5)*1.8,r:4+Math.random()*5,l:16,m:16});
+          }
+          if(particles.length>220) particles.splice(0,particles.length-220);
+          for(let i=particles.length-1;i>=0;i--){
+            const p=particles[i]; p.x+=p.vx; p.y+=p.vy; p.l--;
+            if(p.k==="dust"){ p.vx*=0.97; p.vy-=0.025; p.r+=0.28; }
+            else if(p.k==="grain"){ p.vy+=0.12; }
+            else { p.r*=0.95; }
+            if(p.l<=0){ particles.splice(i,1); continue; }
+            const t=p.l/p.m;
+            if(p.k==="dust"){
+              ctx.fillStyle="rgba(218,170,110,"+(t*0.4)+")";
+              ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+            } else if(p.k==="grain"){
+              ctx.fillStyle="rgba(253,224,155,"+(t*0.85)+")";
+              ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+            } else {
+              ctx.save(); ctx.globalCompositeOperation="lighter";
+              if(p.t==="cyan") ctx.fillStyle=t>0.5?"rgba(236,254,255,"+t+")":"rgba(34,211,238,"+t+")";
+              else if(p.t==="cobalt") ctx.fillStyle=t>0.5?"rgba(254,249,195,"+t+")":"rgba(56,189,248,"+t+")";
+              else if(p.t==="crimson") ctx.fillStyle=t>0.5?"rgba(254,240,138,"+t+")":"rgba(220,38,38,"+t+")";
+              else ctx.fillStyle=t>0.5?"rgba(253,224,71,"+t+")":"rgba(239,68,68,"+t+")";
+              ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); ctx.restore();
+            }
+          }
+          if(aiX>=-60 && aiX<=w+60){
+            if(state.vehicle==="car") drawCar(aiX,aiY,false,DIFF_CFG[state.diff].ai,"ai",sp);
+            else drawCamel(aiX,aiY,false,DIFF_CFG[state.diff].ai);
+          }
+          if(state.vehicle==="car") drawCar(px,plY,true,state.speed,state.carId,sp);
+          else drawCamel(px,plY,true,state.speed);
+          ctx.fillStyle="rgba(15,23,42,0.75)"; ctx.fillRect(10,8,210,20);
+          ctx.fillStyle="#FDE68A"; ctx.font="600 10px monospace"; ctx.textAlign="left";
+          ctx.fillText("speed: "+Math.round(state.speed)+" km/j · bgX: "+Math.round(state.bgOffset)+"px",16,21);
+        }
+      }
+      requestAnimationFrame(loop);
+    }
+
+    function startRace(){
+      unlockAudio();
+      stopAudio();
+      const cfg=DIFF_CFG[state.diff];
+      state.active=true; state.playerDist=0; state.aiDist=0; state.speed=BASE_SPEED; state.bgOffset=0;
+      state.status="normal"; state.statusTimer=0; state.timeRem=cfg.time; state.totalTime=cfg.time;
+      state.correct=0; state.wrong=0; state.streak=0; state.bestStreak=0; state.topSpeed=BASE_SPEED;
+      state.deck=[].concat(QUESTIONS).sort(function(){ return Math.random()-0.5; });
+      state.qIdx=0;
+      particles.length=0;
+      showView("play");
+      updatePlayBadges();
+      renderQuestion();
+      playSfx("start");
+    }
+
+    document.querySelectorAll(".lkr-diff-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        unlockAudio();
+        playUi("select");
+        state.diff=btn.getAttribute("data-diff");
+        document.querySelectorAll(".lkr-diff-btn").forEach(function(b){ b.classList.toggle("active", b===btn); });
+      });
+    });
+    document.querySelectorAll(".lkr-filter-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        unlockAudio();
+        playUi("click");
+        state.boardFilter = btn.getAttribute("data-filter") || "all";
+        document.querySelectorAll(".lkr-filter-btn").forEach(function(b){ b.classList.toggle("active", b===btn); });
+        renderLeaderboard();
+      });
+    });
+
+    $("brand-home").addEventListener("click", function(){ unlockAudio(); playUi("click"); if(state.active){state.active=false;stopAudio();} showView("menu"); });
+    $("lkr-camel-btn").addEventListener("click", function(){ unlockAudio(); playUi("select"); state.vehicle="camel"; renderCarOptions(); });
+    $("lkr-start-btn").addEventListener("click", startRace);
+    $("sum-again-btn").addEventListener("click", startRace);
+    $("sum-home-btn").addEventListener("click", function(){ unlockAudio(); playUi("click"); showView("menu"); });
+    $("board-play-btn").addEventListener("click", startRace);
+    $("notes-play-btn").addEventListener("click", startRace);
+    $("board-reset-btn").addEventListener("click", function(){
+      unlockAudio(); playUi("click");
+      memoryBoard = [].concat(SEEDED_BOARD);
+      try{ localStorage.setItem(STORE_KEY, JSON.stringify(memoryBoard)); }catch(e){}
+      renderLeaderboard();
+    });
+    $("sum-board-btn").addEventListener("click", function(){ unlockAudio(); playUi("click"); renderLeaderboard(); showView("board"); });
+    $("nav-arena").addEventListener("click", function(){ unlockAudio(); playUi("click"); if(state.active){state.active=false;stopAudio();} showView("menu"); });
+    $("nav-board").addEventListener("click", function(){ unlockAudio(); playUi("click"); if(state.active){state.active=false;stopAudio();} renderLeaderboard(); showView("board"); });
+    $("nav-notes").addEventListener("click", function(){ unlockAudio(); playUi("click"); if(state.active){state.active=false;stopAudio();} showView("notes"); });
+    $("header-cta").addEventListener("click", function(){ unlockAudio(); if(state.view==="play"){playUi("click");state.active=false;stopAudio();showView("menu");} else startRace(); });
+    $("btn-mute").addEventListener("click", function(){
+      unlockAudio();
+      state.muted=!state.muted;
+      playUi("toggle", !state.muted);
+      $("btn-mute").textContent = state.muted ? "Bunyi: OFF" : "Bunyi: ON";
+      $("btn-mute").classList.toggle("on", !state.muted);
+    });
+    $("btn-music").addEventListener("click", function(){
+      unlockAudio();
+      state.musicMuted=!state.musicMuted;
+      playUi("toggle", !state.musicMuted);
+      $("btn-music").textContent = state.musicMuted ? "Muzik: OFF" : "Muzik: ON";
+      $("btn-music").classList.toggle("on", !state.musicMuted);
+    });
+    window.addEventListener("pointerdown", unlockAudio, { passive:true });
+    window.addEventListener("keydown", function(e){
+      unlockAudio();
+      if(state.view!=="play" || state.answered) return;
+      const k=e.key.toUpperCase();
+      if(k==="1"||k==="A") handleAnswer(0);
+      else if(k==="2"||k==="B") handleAnswer(1);
+      else if(k==="3"||k==="C") handleAnswer(2);
+      else if(k==="4"||k==="D") handleAnswer(3);
+    });
+
+    renderCarOptions();
+    renderLeaderboard();
+    requestAnimationFrame(loop);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", startApp);
+  } else {
+    startApp();
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1503 @@
+<iframe
+  title="Lumba Kereta Ramadan"
+  width="100%"
+  height="500"
+  style="width:100%;height:500px;border:0;border-radius:12px;overflow:hidden;display:block;"
+  loading="lazy"
+  allow="autoplay; fullscreen"
+  sandbox="allow-scripts allow-same-origin allow-forms"
+  srcdoc="<!DOCTYPE html>
+<html lang=&quot;ms&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot; />
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; />
+<title>Lumba Kereta Ramadan</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%;
+    height: 500px;
+    max-height: 500px;
+    overflow: hidden;
+    background: #0F172A;
+    color: #F8FAFC;
+    font-family: system-ui, -apple-system, &quot;Segoe UI&quot;, Roboto, sans-serif;
+  }
+  #lkr-app {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #0F172A;
+    color: #F8FAFC;
+    font-family: system-ui, -apple-system, &quot;Segoe UI&quot;, Roboto, sans-serif;
+    user-select: none;
+  }
+  .lkr-victory-flash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 25;
+    display: none;
+  }
+  .lkr-victory-flash.show {
+    display: block;
+    animation: lkrVicFlash 2.2s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  #lkr-confetti {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 30;
+    display: none;
+  }
+  #lkr-confetti.show { display: block; }
+  @keyframes lkrVicFlash {
+    0% { opacity: 0; }
+    18% { opacity: 0.85; }
+    55% { opacity: 0.42; }
+    100% { opacity: 0.16; }
+  }
+  @keyframes lkrTrophyPop {
+    0% { opacity: 0; transform: scale(0.75) translateY(6px); }
+    65% { opacity: 1; transform: scale(1.06) translateY(-2px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes lkrTrophyFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  .lkr-header {
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 12px;
+    background: #020617;
+    border-bottom: 1px solid #1E293B;
+    position: relative;
+    z-index: 22;
+  }
+  .lkr-brand {
+    background: transparent;
+    border: 0;
+    font-weight: 800;
+    font-size: 13.5px;
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    text-align: left;
+  }
+  .lkr-brand:hover { color: #FCD34D; }
+  .lkr-nav { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .lkr-nav button {
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    color: #CBD5E1;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 2px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .lkr-nav button.active { color: #FCD34D; border-bottom-color: #FBBF24; }
+  .lkr-btn-primary {
+    background: #F59E0B;
+    color: #0F172A;
+    border: 0;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .lkr-btn-primary:hover { background: #FBBF24; }
+  .lkr-btn-ghost {
+    background: #0F172A;
+    color: #E2E8F0;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 6px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .lkr-btn-ghost:hover { background: #1E293B; color: #FFFFFF; }
+  .lkr-main {
+    flex: 1;
+    min-height: 0;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .lkr-menu {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    background: #111827;
+    border: 1px solid #1E293B;
+    border-radius: 12px;
+    padding: 10px 12px;
+    overflow-y: auto;
+  }
+  .lkr-menu > * { flex-shrink: 0; }
+  .lkr-menu-top { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lkr-label { display: block; font-size: 11px; font-weight: 600; color: #CBD5E1; margin-bottom: 4px; }
+  .lkr-input {
+    width: 100%;
+    background: #020617;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #FFFFFF;
+    padding: 6px 10px;
+    font-size: 12px;
+    outline: none;
+  }
+  .lkr-input:focus { border-color: #F59E0B; }
+  .lkr-diff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .lkr-diff-btn {
+    background: #020617;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #CBD5E1;
+    padding: 5px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .lkr-diff-btn.active { border-color: #F59E0B; background: rgba(245,158,11,0.16); color: #FDE68A; }
+  .lkr-cars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .lkr-car-card {
+    position: relative;
+    height: 76px;
+    border-radius: 9px;
+    border: 1px solid #334155;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0F172A, #1E293B);
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+  }
+  .lkr-car-card.active { border: 2px solid #FBBF24; box-shadow: 0 0 0 1px rgba(251,191,36,0.35); }
+  .lkr-car-card img {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .lkr-car-fallback {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .lkr-car-card .cap {
+    position: absolute;
+    z-index: 3;
+    inset: auto 0 0 0;
+    padding: 14px 6px 4px;
+    background: linear-gradient(to top, rgba(2,6,23,0.95), transparent);
+    font-size: 10px;
+    font-weight: 700;
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lkr-camel-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-radius: 9px;
+    border: 1px solid #334155;
+    background: #020617;
+    color: #E2E8F0;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .lkr-camel-btn.active { border: 2px solid #FBBF24; background: rgba(245,158,11,0.14); color: #FFFFFF; }
+  .lkr-rules-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 11px; color: #CBD5E1; }
+  .lkr-rule-box { background: #0F172A; border: 1px solid #1E293B; border-radius: 8px; padding: 6px 8px; line-height: 1.3; }
+  .lkr-start-big {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 0;
+    background: #F59E0B;
+    color: #0F172A;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .lkr-start-big:hover { background: #FBBF24; }
+  .lkr-play { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
+  .lkr-hud {
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 10px;
+    border-radius: 9px;
+    border: 1px solid #1E293B;
+    background: #111827;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+  .lkr-hud-stats { display: flex; align-items: center; gap: 10px; white-space: nowrap; overflow: hidden; }
+  .lkr-hud-stats b { color: #FDE68A; }
+  .lkr-hud-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+  .lkr-icon-btn {
+    background: #0F172A;
+    border: 1px solid #334155;
+    color: #E2E8F0;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .lkr-icon-btn.on { border-color: #F59E0B; color: #FDE68A; }
+  .lkr-quiz {
+    flex-shrink: 0;
+    background: #FAF7F2;
+    color: #0F172A;
+    border: 1px solid #FDE68A;
+    border-radius: 10px;
+    padding: 7px 10px;
+  }
+  .lkr-quiz-top { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: #475569; margin-bottom: 3px; }
+  .lkr-quiz-q { font-size: 13px; font-weight: 800; color: #0F172A; line-height: 1.25; margin-bottom: 5px; }
+  .lkr-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+  .lkr-opt {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-align: left;
+    padding: 4px 8px;
+    border-radius: 7px;
+    border: 1px solid #CBD5E1;
+    background: #FFFFFF;
+    color: #0F172A;
+    font-size: 11.5px;
+    line-height: 1.2;
+    cursor: pointer;
+  }
+  .lkr-opt:hover:not(:disabled) { border-color: #D97706; background: #FFFBEB; }
+  .lkr-opt.correct { background: #ECFDF5; border-color: #059669; color: #064E3B; font-weight: 700; }
+  .lkr-opt.wrong { background: #FEF2F2; border-color: #DC2626; color: #7F1D1D; }
+  .lkr-opt-key {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: #F1F5F9;
+    color: #334155;
+    font-size: 10px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .lkr-quiz-fb {
+    margin-top: 5px;
+    padding-top: 4px;
+    border-top: 1px solid #E2E8F0;
+    font-size: 10.5px;
+    color: #475569;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lkr-canvas-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 120px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #334155;
+    background: #0F172A;
+  }
+  #lkr-canvas { width: 100%; height: 100%; display: block; }
+  .lkr-car-badge {
+    position: absolute;
+    top: 34px;
+    left: 10px;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px 3px 4px;
+    border-radius: 7px;
+    border: 1px solid rgba(51,65,85,0.9);
+    background: rgba(2,6,23,0.82);
+    pointer-events: none;
+  }
+  .lkr-car-badge.show { display: flex; }
+  .lkr-car-badge img { width: 32px; height: 20px; object-fit: cover; border-radius: 4px; }
+  .lkr-car-badge span { font-size: 10px; font-weight: 700; color: #F1F5F9; white-space: nowrap; }
+  .lkr-nitro-card {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 178px;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 2px solid #FBBF24;
+    background: rgba(2, 6, 23, 0.94);
+    display: none;
+    pointer-events: none;
+  }
+  .lkr-nitro-card.show { display: block; }
+  .lkr-nitro-img-wrap { position: relative; height: 48px; width: 100%; overflow: hidden; background: linear-gradient(90deg,#1E1B4B,#9A3412,#EA580C); }
+  .lkr-nitro-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.88; }
+  .lkr-nitro-bar { padding: 4px 8px; font-size: 10px; font-weight: 800; color: #FDE68A; display: flex; justify-content: space-between; gap: 6px; }
+  .lkr-nitro-bar span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lkr-panel {
+    position: relative;
+    z-index: 20;
+    flex: 1;
+    min-height: 0;
+    background: #111827;
+    border: 1px solid #1E293B;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+  }
+  .lkr-panel.won {
+    background: rgba(17, 24, 39, 0.9);
+    border-color: rgba(251, 191, 36, 0.65);
+    box-shadow: 0 0 28px rgba(245, 158, 11, 0.16);
+  }
+  .lkr-sum-head { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .lkr-trophy-box {
+    width: 78px;
+    height: 78px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    background: #020617;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lkr-trophy-box.pop { animation: lkrTrophyPop 500ms cubic-bezier(0.16,1,0.3,1) forwards; }
+  .lkr-trophy-box svg.float { animation: lkrTrophyFloat 2.4s ease-in-out infinite; }
+  .lkr-stats-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0; flex-shrink: 0; }
+  .lkr-stat-box { background: #0F172A; border: 1px solid #1E293B; border-radius: 8px; padding: 8px; }
+  .lkr-stat-box small { font-size: 10.5px; color: #94A3B8; display: block; }
+  .lkr-stat-box strong { font-size: 17px; color: #FBBF24; font-variant-numeric: tabular-nums; }
+  .lkr-filter-bar { display: inline-flex; gap: 3px; background: #020617; border: 1px solid #1E293B; border-radius: 8px; padding: 3px; }
+  .lkr-filter-btn { background: transparent; border: 0; color: #CBD5E1; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px; cursor: pointer; }
+  .lkr-filter-btn.active { background: #F59E0B; color: #0F172A; font-weight: 700; }
+  .lkr-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .lkr-table th, .lkr-table td { padding: 6px 8px; border-bottom: 1px solid #1E293B; text-align: left; }
+  .lkr-table th { color: #94A3B8; font-size: 10.5px; }
+  .lkr-notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lkr-note-card { background: #0F172A; border: 1px solid #1E293B; border-radius: 10px; padding: 10px 12px; }
+  .lkr-note-card h3 { font-size: 13px; color: #FCD34D; margin-bottom: 4px; }
+  .lkr-note-card p { font-size: 11px; color: #CBD5E1; line-height: 1.4; margin-bottom: 6px; }
+  .lkr-note-card strong { display: block; font-size: 11.5px; color: #FFFFFF; margin-top: 4px; }
+  @media (max-width: 600px) {
+    .lkr-menu-top, .lkr-notes-grid { grid-template-columns: 1fr; }
+    .lkr-cars-grid { grid-template-columns: repeat(2, 1fr); }
+    .lkr-car-card { height: 56px; }
+    .lkr-rules-row { display: none; }
+    .lkr-stats-4 { grid-template-columns: repeat(2, 1fr); }
+    .lkr-quiz-q { font-size: 12px; }
+    .lkr-opt { font-size: 10.5px; min-height: 32px; }
+    .lkr-trophy-box { width: 64px; height: 64px; }
+  }
+</style>
+</head>
+<body>
+<div id=&quot;lkr-app&quot;>
+  <div id=&quot;lkr-victory-flash&quot; class=&quot;lkr-victory-flash&quot; aria-hidden=&quot;true&quot;></div>
+  <canvas id=&quot;lkr-confetti&quot; aria-hidden=&quot;true&quot;></canvas>
+
+  <header class=&quot;lkr-header&quot;>
+    <button type=&quot;button&quot; id=&quot;brand-home&quot; class=&quot;lkr-brand&quot;>Lumba Kereta Ramadan</button>
+    <nav class=&quot;lkr-nav&quot;>
+      <button type=&quot;button&quot; id=&quot;nav-arena&quot; class=&quot;active&quot;>Arena</button>
+      <button type=&quot;button&quot; id=&quot;nav-board&quot;>Pendahulu</button>
+      <button type=&quot;button&quot; id=&quot;nav-notes&quot;>Nota</button>
+    </nav>
+    <button type=&quot;button&quot; id=&quot;header-cta&quot; class=&quot;lkr-btn-primary&quot;>Mula Lumba</button>
+  </header>
+
+  <main class=&quot;lkr-main&quot;>
+    <section id=&quot;view-menu&quot; class=&quot;lkr-menu&quot;>
+      <div class=&quot;lkr-menu-top&quot;>
+        <div>
+          <label class=&quot;lkr-label&quot; for=&quot;lkr-name&quot;>Nama Murid</label>
+          <input id=&quot;lkr-name&quot; class=&quot;lkr-input&quot; type=&quot;text&quot; maxlength=&quot;28&quot; value=&quot;Murid 1&quot; placeholder=&quot;Nama anda...&quot; />
+        </div>
+        <div>
+          <span class=&quot;lkr-label&quot;>Tahap Pelumba AI</span>
+          <div class=&quot;lkr-diff-grid&quot;>
+            <button type=&quot;button&quot; class=&quot;lkr-diff-btn&quot; data-diff=&quot;easy&quot;>Santai</button>
+            <button type=&quot;button&quot; class=&quot;lkr-diff-btn active&quot; data-diff=&quot;medium&quot;>Sederhana</button>
+            <button type=&quot;button&quot; class=&quot;lkr-diff-btn&quot; data-diff=&quot;hard&quot;>Pantas</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class=&quot;lkr-label&quot;>Pilih Kereta Lumba atau Unta Gurun</span>
+        <div id=&quot;lkr-cars&quot; class=&quot;lkr-cars-grid&quot;></div>
+      </div>
+
+      <button type=&quot;button&quot; id=&quot;lkr-camel-btn&quot; class=&quot;lkr-camel-btn&quot;>
+        <span>Unta Gurun Ramadan (Bunyi tapak kaki)</span>
+        <span id=&quot;lkr-camel-check&quot; style=&quot;color:#FBBF24;display:none;&quot;>Dipilih</span>
+      </button>
+
+      <div class=&quot;lkr-rules-row&quot;>
+        <div class=&quot;lkr-rule-box&quot;><strong style=&quot;color:#34D399;&quot;>Betul = Nitro</strong><br/>Pecutan &amp;amp; jejak api aktif!</div>
+        <div class=&quot;lkr-rule-box&quot;><strong style=&quot;color:#F87171;&quot;>Salah = Henti 2s</strong><br/>AI terus mara ke hadapan.</div>
+        <div class=&quot;lkr-rule-box&quot;><strong style=&quot;color:#FBBF24;&quot;>1,000m Senja</strong><br/>Tamat sebelum terbenam!</div>
+      </div>
+
+      <button type=&quot;button&quot; id=&quot;lkr-start-btn&quot; class=&quot;lkr-start-big&quot;>Mulakan Perlumbaan</button>
+    </section>
+
+    <section id=&quot;view-play&quot; class=&quot;lkr-play&quot; style=&quot;display:none;&quot;>
+      <div class=&quot;lkr-hud&quot;>
+        <div class=&quot;lkr-hud-stats&quot;>
+          <span>Senja: <b id=&quot;hud-time&quot;>60.0s</b></span>
+          <span>Laju: <b id=&quot;hud-speed&quot;>44 km/j</b></span>
+          <span>Jarak: <b id=&quot;hud-dist&quot;>0m / 0m</b></span>
+        </div>
+        <div class=&quot;lkr-hud-actions&quot;>
+          <button type=&quot;button&quot; id=&quot;btn-music&quot; class=&quot;lkr-icon-btn on&quot;>Muzik: ON</button>
+          <button type=&quot;button&quot; id=&quot;btn-mute&quot; class=&quot;lkr-icon-btn on&quot;>Bunyi: ON</button>
+        </div>
+      </div>
+
+      <div class=&quot;lkr-quiz&quot;>
+        <div class=&quot;lkr-quiz-top&quot;>
+          <span id=&quot;q-meta&quot;>Soalan 1</span>
+          <span id=&quot;q-status&quot;>Tekan A-D atau 1-4</span>
+        </div>
+        <div id=&quot;q-text&quot; class=&quot;lkr-quiz-q&quot;></div>
+        <div id=&quot;q-opts&quot; class=&quot;lkr-opts&quot;></div>
+        <div id=&quot;q-fb&quot; class=&quot;lkr-quiz-fb&quot;>Jawab betul untuk kuasa Nitro · Jawab salah terhenti 2 saat</div>
+      </div>
+
+      <div class=&quot;lkr-canvas-wrap&quot;>
+        <canvas id=&quot;lkr-canvas&quot;></canvas>
+        <div id=&quot;car-badge&quot; class=&quot;lkr-car-badge&quot;>
+          <img id=&quot;car-badge-img&quot; alt=&quot;Kenderaan dipilih&quot; referrerpolicy=&quot;no-referrer&quot; />
+          <span id=&quot;car-badge-name&quot;></span>
+        </div>
+        <div id=&quot;nitro-card&quot; class=&quot;lkr-nitro-card&quot;>
+          <div id=&quot;nitro-img-wrap&quot; class=&quot;lkr-nitro-img-wrap&quot;>
+            <img id=&quot;nitro-car-img&quot; alt=&quot;Nitro aktif&quot; referrerpolicy=&quot;no-referrer&quot; />
+          </div>
+          <div class=&quot;lkr-nitro-bar&quot;>
+            <span id=&quot;nitro-title-txt&quot;>NITRO AKTIF!</span>
+            <span id=&quot;nitro-speed-txt&quot;>125 km/j</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id=&quot;view-summary&quot; class=&quot;lkr-panel&quot; style=&quot;display:none;&quot;>
+      <div class=&quot;lkr-sum-head&quot;>
+        <div id=&quot;sum-trophy&quot; class=&quot;lkr-trophy-box&quot;></div>
+        <div style=&quot;min-width:0;&quot;>
+          <div id=&quot;sum-sub&quot; style=&quot;font-size:11px;color:#FBBF24;font-weight:700;margin-bottom:3px;&quot;></div>
+          <h2 id=&quot;sum-title&quot; style=&quot;font-size:18px;font-weight:800;color:#FFFFFF;margin-bottom:4px;line-height:1.2;&quot;></h2>
+          <p id=&quot;sum-desc&quot; style=&quot;font-size:12px;color:#CBD5E1;line-height:1.35;&quot;></p>
+        </div>
+      </div>
+      <div class=&quot;lkr-stats-4&quot;>
+        <div class=&quot;lkr-stat-box&quot;><small>Jumlah Skor</small><strong id=&quot;sum-score&quot;>0</strong></div>
+        <div class=&quot;lkr-stat-box&quot;><small>Ketepatan</small><strong id=&quot;sum-acc&quot;>0%</strong></div>
+        <div class=&quot;lkr-stat-box&quot;><small>Puncak Laju</small><strong id=&quot;sum-top&quot;>0</strong></div>
+        <div class=&quot;lkr-stat-box&quot;><small>Baki Senja</small><strong id=&quot;sum-rem&quot;>0s</strong></div>
+      </div>
+      <div style=&quot;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;flex-shrink:0;&quot;>
+        <button type=&quot;button&quot; id=&quot;sum-home-btn&quot; class=&quot;lkr-btn-ghost&quot;>Home</button>
+        <button type=&quot;button&quot; id=&quot;sum-board-btn&quot; class=&quot;lkr-btn-ghost&quot;>Papan Pendahulu</button>
+        <button type=&quot;button&quot; id=&quot;sum-again-btn&quot; class=&quot;lkr-btn-primary&quot;>Main Semula</button>
+      </div>
+    </section>
+
+    <section id=&quot;view-board&quot; class=&quot;lkr-panel&quot; style=&quot;display:none;justify-content:flex-start;gap:8px;&quot;>
+      <div style=&quot;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0;&quot;>
+        <h2 style=&quot;font-size:15px;font-weight:800;color:#FFFFFF;&quot;>Papan Pendahulu Pelumba</h2>
+        <div style=&quot;display:flex;align-items:center;gap:6px;flex-wrap:wrap;&quot;>
+          <div class=&quot;lkr-filter-bar&quot;>
+            <button type=&quot;button&quot; class=&quot;lkr-filter-btn active&quot; data-filter=&quot;all&quot;>Semua</button>
+            <button type=&quot;button&quot; class=&quot;lkr-filter-btn&quot; data-filter=&quot;car&quot;>Kereta</button>
+            <button type=&quot;button&quot; class=&quot;lkr-filter-btn&quot; data-filter=&quot;camel&quot;>Unta</button>
+          </div>
+          <button type=&quot;button&quot; id=&quot;board-reset-btn&quot; class=&quot;lkr-btn-ghost&quot;>Set Semula</button>
+          <button type=&quot;button&quot; id=&quot;board-play-btn&quot; class=&quot;lkr-btn-primary&quot;>Main Sekarang</button>
+        </div>
+      </div>
+      <div style=&quot;overflow-y:auto;flex:1;min-height:0;&quot;>
+        <table class=&quot;lkr-table&quot;>
+          <thead>
+            <tr><th>Ked.</th><th>Nama Murid</th><th>Kenderaan</th><th>Tahap</th><th>Ketepatan</th><th style=&quot;text-align:right;&quot;>Skor</th></tr>
+          </thead>
+          <tbody id=&quot;board-body&quot;></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id=&quot;view-notes&quot; class=&quot;lkr-panel&quot; style=&quot;display:none;justify-content:flex-start;gap:8px;&quot;>
+      <div style=&quot;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;&quot;>
+        <div>
+          <h2 style=&quot;font-size:15px;font-weight:800;color:#FFFFFF;&quot;>Nota Ringkas Ibadah Puasa</h2>
+          <p style=&quot;font-size:11px;color:#94A3B8;&quot;>Ulang kaji pantas syarat, rukun, dan hukum puasa sebelum berlumba.</p>
+        </div>
+        <button type=&quot;button&quot; id=&quot;notes-play-btn&quot; class=&quot;lkr-btn-primary&quot;>Uji Ilmu di Litar</button>
+      </div>
+      <div class=&quot;lkr-notes-grid&quot; style=&quot;overflow-y:auto;flex:1;min-height:0;&quot;>
+        <div class=&quot;lkr-note-card&quot;>
+          <h3>01. Syarat Wajib &amp;amp; Syarat Sah</h3>
+          <strong>4 Syarat Wajib Puasa</strong>
+          <p>Islam, Baligh (cukup umur), Berakal (waras), dan Mampu / sihat.</p>
+          <strong>4 Syarat Sah Puasa</strong>
+          <p>Beragama Islam, Mumayyiz, suci daripada haid &amp;amp; nifas, dan pada hari yang dibolehkan syarak.</p>
+        </div>
+        <div class=&quot;lkr-note-card&quot;>
+          <h3>02. Dua Rukun Puasa</h3>
+          <strong>1. Niat pada Waktu Malam</strong>
+          <p>Berniat di dalam hati antara Maghrib hingga sebelum terbit fajar Subuh.</p>
+          <strong>2. Menahan Diri</strong>
+          <p>Menahan diri daripada perkara membatalkan puasa dari fajar sadiq hingga terbenam matahari.</p>
+        </div>
+        <div class=&quot;lkr-note-card&quot;>
+          <h3>03. Hari Diharamkan Berpuasa</h3>
+          <strong>1 Syawal &amp;amp; 10 Zulhijjah</strong>
+          <p>Haram berpuasa pada Hari Raya Aidilfitri dan Hari Raya Aidiladha.</p>
+          <strong>Hari Tasyrik (11, 12, 13 Zulhijjah)</strong>
+          <p>Haram berpuasa pada tiga hari selepas Aidiladha.</p>
+        </div>
+        <div class=&quot;lkr-note-card&quot;>
+          <h3>04. Batal Puasa &amp;amp; Amalan Sunat</h3>
+          <strong>Perkara Membatalkan</strong>
+          <p>Makan atau minum dengan sengaja, muntah dengan sengaja, pengsan sepanjang hari, atau keluar haid/nifas.</p>
+          <strong>Amalan Sunat Utama</strong>
+          <p>Bersahur, menyegerakan berbuka dengan kurma atau air, solat Tarawih, tadarus Al-Quran, dan iktikaf.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  function startApp(){
+    if(window.__lkrInitialized) return;
+    window.__lkrInitialized = true;
+
+    const CARS = [
+      { id:&quot;car-gt&quot;, name:&quot;JZX100 Drift Putih&quot;, imageUrl:&quot;https://res.cloudinary.com/cd7ck4mc/image/upload/v1795582432/586945763973759570.jpg&quot; },
+      { id:&quot;car-drift&quot;, name:&quot;Porsche GT3 Biru&quot;, imageUrl:&quot;https://res.cloudinary.com/cd7ck4mc/image/upload/v1795582644/DRIFTING.jpg&quot; },
+      { id:&quot;car-ferrari&quot;, name:&quot;Ferrari F40 LBWK&quot;, imageUrl:&quot;https://res.cloudinary.com/cd7ck4mc/image/upload/v1795582643/Ferrari_movie_night.jpg&quot; },
+      { id:&quot;car-hyper&quot;, name:&quot;Lancer Evo Merah&quot;, imageUrl:&quot;https://res.cloudinary.com/cd7ck4mc/image/upload/v1795582643/ychk4boqflentcyvjhwn.jpg&quot; }
+    ];
+
+    const QUESTIONS = [
+      { category:&quot;Hukum Puasa&quot;, question:&quot;Apakah hukum berpuasa pada Hari Raya Aidilfitri (1 Syawal)?&quot;, options:[&quot;Haram&quot;,&quot;Makruh&quot;,&quot;Sunat&quot;,&quot;Harus&quot;], correctIndex:0, explanation:&quot;Umat Islam diharamkan berpuasa pada 1 Syawal, 10 Zulhijjah, dan Hari Tasyrik.&quot; },
+      { category:&quot;Syarat &amp; Rukun&quot;, question:&quot;Yang manakah merupakan 1 daripada 4 syarat wajib puasa?&quot;, options:[&quot;Baligh&quot;,&quot;Mumayyiz&quot;,&quot;Bersahur&quot;,&quot;Suci daripada hadas kecil&quot;], correctIndex:0, explanation:&quot;Empat syarat wajib puasa ialah Islam, baligh, berakal, dan mampu.&quot; },
+      { category:&quot;Syarat &amp; Rukun&quot;, question:&quot;Apakah rukun puasa yang pertama bagi seseorang yang ingin berpuasa?&quot;, options:[&quot;Membaca doa berbuka&quot;,&quot;Niat berpuasa pada waktu malam&quot;,&quot;Mandi wajib sebelum subuh&quot;,&quot;Makan sahur sebelum imsak&quot;], correctIndex:1, explanation:&quot;Rukun puasa ada dua: berniat pada waktu malam dan menahan diri.&quot; },
+      { category:&quot;Syarat &amp; Rukun&quot;, question:&quot;Bilakah tempoh waktu menahan diri daripada perkara yang membatalkan puasa?&quot;, options:[&quot;Tengah malam hingga Asar&quot;,&quot;Terbit fajar sadiq hingga terbenam matahari&quot;,&quot;Imsak hingga terbit matahari&quot;,&quot;Azan Subuh hingga Isyak&quot;], correctIndex:1, explanation:&quot;Puasa bermula dari terbit fajar sadiq (Subuh) hingga terbenam matahari (Maghrib).&quot; },
+      { category:&quot;Hukum Puasa&quot;, question:&quot;Apakah hukum berpuasa di bulan Ramadan bagi Muslim yang cukup syarat?&quot;, options:[&quot;Sunat Muakkad&quot;,&quot;Wajib (Fardu Ain)&quot;,&quot;Harus&quot;,&quot;Fardu Kifayah&quot;], correctIndex:1, explanation:&quot;Puasa Ramadan ialah Rukun Islam ketiga yang wajib (Fardu Ain).&quot; },
+      { category:&quot;Batal Puasa&quot;, question:&quot;Antara tindakan berikut, yang manakah membatalkan puasa?&quot;, options:[&quot;Tersalah makan kerana terlupa&quot;,&quot;Mandi pada waktu tengah hari&quot;,&quot;Makan atau minum dengan sengaja&quot;,&quot;Menelan air liur sendiri&quot;], correctIndex:2, explanation:&quot;Makan atau minum dengan sengaja membatalkan puasa.&quot; },
+      { category:&quot;Batal Puasa&quot;, question:&quot;Apakah hukum puasa seseorang yang muntah secara tidak sengaja?&quot;, options:[&quot;Batal serta-merta&quot;,&quot;Tetap sah dan tidak batal&quot;,&quot;Makruh dan perlu qada&quot;,&quot;Wajib bayar fidyah&quot;], correctIndex:1, explanation:&quot;Muntah tanpa sengaja tidak membatalkan puasa selagi tidak ditelan semula.&quot; },
+      { category:&quot;Sunat &amp; Adab&quot;, question:&quot;Apakah amalan sunat yang digalakkan sejurus sebelum masuk waktu Subuh?&quot;, options:[&quot;Bersahur&quot;,&quot;Solat Tarawih&quot;,&quot;Solat Aidilfitri&quot;,&quot;Berbuka awal&quot;], correctIndex:0, explanation:&quot;Bersahur ialah amalan sunat yang penuh keberkatan.&quot; },
+      { category:&quot;Sunat &amp; Adab&quot;, question:&quot;Apakah sunnah Nabi SAW ketika berbuka sebaik masuk waktu Maghrib?&quot;, options:[&quot;Menunggu azan tamat&quot;,&quot;Menyegerakan berbuka dengan kurma atau air&quot;,&quot;Tidur dahulu sebelum makan&quot;,&quot;Berbuka selepas Isyak&quot;], correctIndex:1, explanation:&quot;Menyegerakan berbuka dengan kurma atau air ialah sunnah Rasulullah SAW.&quot; },
+      { category:&quot;Syarat &amp; Rukun&quot;, question:&quot;Manakah antara berikut bukan syarat sah puasa?&quot;, options:[&quot;Beragama Islam&quot;,&quot;Mumayyiz&quot;,&quot;Suci daripada haid dan nifas&quot;,&quot;Sudah berkahwin&quot;], correctIndex:3, explanation:&quot;Syarat sah puasa ialah Islam, mumayyiz, suci haid/nifas, dan hari yang sah berpuasa.&quot; },
+      { category:&quot;Keistimewaan Ramadan&quot;, question:&quot;Apakah nama malam yang lebih baik daripada seribu bulan di akhir Ramadan?&quot;, options:[&quot;Nisfu Syaaban&quot;,&quot;Malam Lailatul Qadar&quot;,&quot;Israk Mikraj&quot;,&quot;Malam Hijrah&quot;], correctIndex:1, explanation:&quot;Lailatul Qadar lebih baik daripada seribu bulan.&quot; },
+      { category:&quot;Keistimewaan Ramadan&quot;, question:&quot;Bilakah peristiwa Nuzul Al-Quran disambut oleh umat Islam?&quot;, options:[&quot;1 Ramadan&quot;,&quot;10 Ramadan&quot;,&quot;17 Ramadan&quot;,&quot;27 Rejab&quot;], correctIndex:2, explanation:&quot;Nuzul Al-Quran disambut pada 17 Ramadan.&quot; },
+      { category:&quot;Hukum Puasa&quot;, question:&quot;Apakah hukum berpuasa pada Hari Tasyrik (11, 12, 13 Zulhijjah)?&quot;, options:[&quot;Wajib&quot;,&quot;Sunat&quot;,&quot;Makruh&quot;,&quot;Haram&quot;], correctIndex:3, explanation:&quot;Umat Islam diharamkan berpuasa pada Hari Tasyrik.&quot; },
+      { category:&quot;Sunat &amp; Adab&quot;, question:&quot;Solat sunat khusus pada malam bulan Ramadan dikenali sebagai?&quot;, options:[&quot;Solat Dhuha&quot;,&quot;Solat Tarawih&quot;,&quot;Solat Istikharah&quot;,&quot;Solat Gerhana&quot;], correctIndex:1, explanation:&quot;Solat Tarawih dikerjakan setiap malam Ramadan selepas Isyak.&quot; },
+      { category:&quot;Keistimewaan Ramadan&quot;, question:&quot;Apakah zakat wajib yang ditunaikan sebelum solat Aidilfitri?&quot;, options:[&quot;Zakat Perniagaan&quot;,&quot;Zakat Fitrah&quot;,&quot;Zakat Emas&quot;,&quot;Zakat Ternakan&quot;], correctIndex:1, explanation:&quot;Zakat Fitrah wajib ditunaikan sebelum solat sunat Aidilfitri.&quot; },
+      { category:&quot;Hukum Puasa&quot;, question:&quot;Apakah keringanan bagi musafir atau orang sakit yang tidak mampu berpuasa?&quot;, options:[&quot;Boleh berbuka tetapi wajib qada&quot;,&quot;Tidak perlu ganti selamanya&quot;,&quot;Haram berpuasa&quot;,&quot;Puasa separuh hari&quot;], correctIndex:0, explanation:&quot;Musafir dan orang sakit diberi rukhsah berbuka dan wajib qada.&quot; },
+      { category:&quot;Batal Puasa&quot;, question:&quot;Adakah suntikan ubat atau vaksin di lengan membatalkan puasa?&quot;, options:[&quot;Ya, batal serta-merta&quot;,&quot;Tidak batal kerana bukan melalui rongga terbuka&quot;,&quot;Batal jika sakit&quot;,&quot;Wajib berbuka&quot;], correctIndex:1, explanation:&quot;Suntikan melalui otot/urat bukan makanan dan tidak melalui rongga terbuka.&quot; },
+      { category:&quot;Hukum Puasa&quot;, question:&quot;Apakah bayaran bagi warga emas yang uzur dan tidak lagi mampu berpuasa?&quot;, options:[&quot;Mahar&quot;,&quot;Fidyah&quot;,&quot;Kafarah sumpah&quot;,&quot;Diyat&quot;], correctIndex:1, explanation:&quot;Warga emas uzur yang tidak mampu berpuasa wajib membayar fidyah.&quot; },
+      { category:&quot;Syarat &amp; Rukun&quot;, question:&quot;Apakah maksud 'Mumayyiz' dalam syarat sah puasa?&quot;, options:[&quot;Mampu berjalan jauh&quot;,&quot;Kanak-kanak yang sudah dapat membezakan baik dan buruk&quot;,&quot;Orang yang bermusafir&quot;,&quot;Individu yang berhutang puasa&quot;], correctIndex:1, explanation:&quot;Mumayyiz ialah kanak-kanak yang dapat membezakan perkara baik dan buruk.&quot; },
+      { category:&quot;Sunat &amp; Adab&quot;, question:&quot;Antara berikut, perkara manakah dapat menjaga pahala puasa daripada berkurang?&quot;, options:[&quot;Menjaga lidah daripada mengumpat dan berdusta&quot;,&quot;Tidur sepanjang hari tanpa solat&quot;,&quot;Membazir di bazar&quot;,&quot;Bertengkar dengan rakan&quot;], correctIndex:0, explanation:&quot;Puasa melatih diri menjaga pertuturan, penglihatan, dan akhlak mulia.&quot; },
+      { category:&quot;Keistimewaan Ramadan&quot;, question:&quot;Apakah maksud amalan 'Iktikaf' pada 10 malam terakhir Ramadan?&quot;, options:[&quot;Berhenti bekerja&quot;,&quot;Berdiam diri di dalam masjid untuk beribadah&quot;,&quot;Menghias rumah&quot;,&quot;Mengadakan jamuan&quot;], correctIndex:1, explanation:&quot;Iktikaf bermaksud berada di dalam masjid dengan niat mendekatkan diri kepada Allah.&quot; },
+      { category:&quot;Batal Puasa&quot;, question:&quot;Apakah hukum jika seseorang pengsan sepanjang hari dari fajar hingga Maghrib?&quot;, options:[&quot;Puasa tetap sah&quot;,&quot;Puasanya batal&quot;,&quot;Hanya sah jika pengsan malam&quot;,&quot;Perlu bayar dam&quot;], correctIndex:1, explanation:&quot;Pengsan sepanjang hari tanpa sedar walau seketika menyebabkan puasa tidak sah.&quot; },
+      { category:&quot;Syarat &amp; Rukun&quot;, question:&quot;Bilakah waktu paling afdal melafazkan niat puasa Ramadan?&quot;, options:[&quot;Selepas terbit matahari&quot;,&quot;Antara Maghrib hingga sebelum fajar Subuh&quot;,&quot;Pada waktu Zohor&quot;,&quot;Selepas Asar&quot;], correctIndex:1, explanation:&quot;Niat puasa fardu dilakukan pada waktu malam sebelum fajar sadiq.&quot; },
+      { category:&quot;Sunat &amp; Adab&quot;, question:&quot;Mengapakah kita digalakkan bersedekah lebih banyak pada bulan Ramadan?&quot;, options:[&quot;Pahala dilipatgandakan dan membantu yang memerlukan&quot;,&quot;Untuk mendapat pujian&quot;,&quot;Kerana kedai tutup&quot;,&quot;Untuk ganti solat&quot;], correctIndex:0, explanation:&quot;Pahala sedekah dilipatgandakan pada bulan Ramadan.&quot; }
+    ];
+
+    const FINISH_DIST = 1000, BASE_SPEED = 44, NITRO_SPEED = 125, SPEED_TO_MPS = 0.34;
+    const DIFF_CFG = { easy:{ai:52,time:70,mult:1}, medium:{ai:62,time:60,mult:1.1}, hard:{ai:72,time:55,mult:1.2} };
+    const STORE_KEY = &quot;lumba_kereta_ramadan_leaderboard_v1&quot;;
+
+    const SEEDED_BOARD = [
+      { id:&quot;seed-1&quot;, playerName:&quot;Aiman Hakim&quot;, vehicle:&quot;car&quot;, carName:&quot;JZX100 Drift Putih&quot;, difficulty:&quot;hard&quot;, accuracy:92, timeRemaining:24.5, score:1840 },
+      { id:&quot;seed-2&quot;, playerName:&quot;Nurul Izzah&quot;, vehicle:&quot;camel&quot;, difficulty:&quot;medium&quot;, accuracy:88, timeRemaining:19.2, score:1620 },
+      { id:&quot;seed-3&quot;, playerName:&quot;Danish Irfan&quot;, vehicle:&quot;car&quot;, carName:&quot;Porsche GT3 Biru&quot;, difficulty:&quot;medium&quot;, accuracy:83, timeRemaining:15.8, score:1490 },
+      { id:&quot;seed-4&quot;, playerName:&quot;Siti Aisyah&quot;, vehicle:&quot;camel&quot;, difficulty:&quot;easy&quot;, accuracy:90, timeRemaining:14.0, score:1350 },
+      { id:&quot;seed-5&quot;, playerName:&quot;Muhammad Faiz&quot;, vehicle:&quot;car&quot;, carName:&quot;Ferrari F40 LBWK&quot;, difficulty:&quot;easy&quot;, accuracy:78, timeRemaining:10.4, score:1180 }
+    ];
+    let memoryBoard = [].concat(SEEDED_BOARD);
+
+    let state = {
+      view:&quot;menu&quot;, vehicle:&quot;car&quot;, carId:CARS[0].id, diff:&quot;medium&quot;, boardFilter:&quot;all&quot;, muted:false, musicMuted:false,
+      active:false, playerDist:0, aiDist:0, speed:BASE_SPEED, bgOffset:0, status:&quot;normal&quot;, statusTimer:0,
+      timeRem:60, totalTime:60, correct:0, wrong:0, streak:0, bestStreak:0, topSpeed:BASE_SPEED, deck:[], qIdx:0, answered:false
+    };
+
+    const TRACK_LOCAL = &quot;/assets/aistudio/Sport_Trap_Rock_by_Infraction__No_Copyright_Music__Training_Day_94db7219.mp3&quot;;
+    const TRACK_PRE = &quot;https://ais-pre-zwfi6vte5jjtlgg44thcut-254477164520.asia-southeast1.run.app/assets/aistudio/Sport_Trap_Rock_by_Infraction__No_Copyright_Music__Training_Day_94db7219.mp3&quot;;
+    const TRACK_SRC = (window.location &amp;&amp; window.location.hostname &amp;&amp; window.location.hostname.indexOf(&quot;ais-&quot;) !== -1) ? TRACK_LOCAL : TRACK_PRE;
+
+    let actx = null, engine = null, noiseBuf = null, bgAudio = null, bgTrackFailed = false, lastHoof = 0, lastSynthBeat = 0, beatStep = 0;
+
+    function unlockAudio(){
+      try{
+        if(!actx){
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if(AC) actx = new AC();
+        }
+        if(actx &amp;&amp; actx.state === &quot;suspended&quot;) actx.resume().catch(function(){});
+      }catch(e){}
+      return actx;
+    }
+    function getBgTrack(){
+      if(bgTrackFailed) return null;
+      if(!bgAudio &amp;&amp; typeof Audio !== &quot;undefined&quot;){
+        bgAudio = new Audio(TRACK_SRC);
+        bgAudio.loop = true;
+        bgAudio.preload = &quot;auto&quot;;
+        bgAudio.volume = 0.42;
+        bgAudio.addEventListener(&quot;error&quot;, function(){ bgTrackFailed = true; });
+      }
+      return bgAudio;
+    }
+    function getNoise(ctx){
+      if(noiseBuf &amp;&amp; noiseBuf.sampleRate === ctx.sampleRate) return noiseBuf;
+      const b = ctx.createBuffer(1, Math.floor(ctx.sampleRate*0.5), ctx.sampleRate), d = b.getChannelData(0);
+      for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+      noiseBuf = b; return b;
+    }
+    function playUi(kind, toggleOn){
+      if(state.muted) return;
+      const ctx = unlockAudio(); if(!ctx) return;
+      const t = ctx.currentTime;
+      if(kind===&quot;select&quot;){
+        [520,780].forEach(function(freq,i){
+          const o=ctx.createOscillator(), g=ctx.createGain(), st=t+i*0.038;
+          o.type=&quot;sine&quot;; o.frequency.setValueAtTime(freq,st);
+          g.gain.setValueAtTime(0.001,st); g.gain.linearRampToValueAtTime(0.07,st+0.008); g.gain.exponentialRampToValueAtTime(0.001,st+0.075);
+          o.connect(g); g.connect(ctx.destination); o.start(st); o.stop(st+0.08);
+        });
+      } else if(kind===&quot;toggle&quot;){
+        const o=ctx.createOscillator(), g=ctx.createGain();
+        o.type=&quot;sine&quot;; o.frequency.setValueAtTime(toggleOn?480:620,t); o.frequency.exponentialRampToValueAtTime(toggleOn?760:380,t+0.07);
+        g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(0.07,t+0.01); g.gain.exponentialRampToValueAtTime(0.001,t+0.08);
+        o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.085);
+      } else {
+        const o=ctx.createOscillator(), g=ctx.createGain();
+        o.type=&quot;triangle&quot;; o.frequency.setValueAtTime(640,t); o.frequency.exponentialRampToValueAtTime(360,t+0.055);
+        g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(0.075,t+0.008); g.gain.exponentialRampToValueAtTime(0.001,t+0.06);
+        o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.065);
+      }
+    }
+    function stopAudio(){
+      if(bgAudio){ try{ bgAudio.pause(); bgAudio.currentTime=0; }catch(e){} }
+      if(engine &amp;&amp; actx){
+        const e=engine; engine=null;
+        try{
+          e.g.gain.setTargetAtTime(0.0001, actx.currentTime, 0.04);
+          setTimeout(function(){ try{e.o1.stop();e.o2.stop();e.o1.disconnect();e.o2.disconnect();}catch(err){} }, 120);
+        }catch(err){}
+      }
+    }
+    function playHoof(nitro){
+      if(state.muted) return;
+      const ctx = unlockAudio(); if(!ctx) return;
+      const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+      o.type=&quot;sine&quot;; o.frequency.setValueAtTime(nitro?148:118,t); o.frequency.exponentialRampToValueAtTime(48,t+0.085);
+      g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(nitro?0.15:0.11,t+0.01); g.gain.exponentialRampToValueAtTime(0.001,t+0.095);
+      o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.11);
+    }
+    function playSfx(kind){
+      if(kind===&quot;start&quot; &amp;&amp; !state.muted &amp;&amp; !state.musicMuted){
+        const tr=getBgTrack();
+        if(tr){ tr.currentTime=0; tr.volume=0.42; tr.play().catch(function(){ bgTrackFailed=true; }); }
+      }
+      if(state.muted) return;
+      const ctx = unlockAudio(); if(!ctx) return;
+      const t = ctx.currentTime;
+      if(kind===&quot;start&quot;){
+        [440,554.37,659.25].forEach(function(freq,i){
+          const o=ctx.createOscillator(), g=ctx.createGain();
+          o.type=&quot;sine&quot;; o.frequency.setValueAtTime(freq, t+i*0.07);
+          g.gain.setValueAtTime(0.09, t+i*0.07); g.gain.exponentialRampToValueAtTime(0.001, t+i*0.07+0.16);
+          o.connect(g); g.connect(ctx.destination); o.start(t+i*0.07); o.stop(t+i*0.07+0.18);
+        });
+      } else if(kind===&quot;nitro&quot;){
+        if(state.vehicle===&quot;car&quot;){
+          const s=ctx.createBufferSource(); s.buffer=getNoise(ctx);
+          const f=ctx.createBiquadFilter(); f.type=&quot;bandpass&quot;; f.frequency.setValueAtTime(240,t); f.frequency.exponentialRampToValueAtTime(980,t+0.35);
+          const g=ctx.createGain(); g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(0.16,t+0.05); g.gain.exponentialRampToValueAtTime(0.001,t+0.45);
+          s.connect(f); f.connect(g); g.connect(ctx.destination); s.start(t); s.stop(t+0.46);
+        } else { playHoof(true); }
+        [523.25,659.25,783.99,1046.5].forEach(function(freq,i){
+          const o=ctx.createOscillator(), g=ctx.createGain(); o.type=&quot;triangle&quot;; o.frequency.setValueAtTime(freq,t+i*0.055);
+          g.gain.setValueAtTime(0.001,t+i*0.055); g.gain.exponentialRampToValueAtTime(0.1,t+i*0.055+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+i*0.055+0.18);
+          o.connect(g); g.connect(ctx.destination); o.start(t+i*0.055); o.stop(t+i*0.055+0.2);
+        });
+      } else if(kind===&quot;wrong&quot;){
+        const o=ctx.createOscillator(), g=ctx.createGain(); o.type=&quot;sawtooth&quot;; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(85,t+0.28);
+        g.gain.setValueAtTime(0.1,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3); o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.32);
+      } else if(kind===&quot;win&quot;){
+        [523.25,659.25,783.99,1046.5,1318.51].forEach(function(freq,i){
+          const o=ctx.createOscillator(), g=ctx.createGain(); o.type=&quot;triangle&quot;; o.frequency.setValueAtTime(freq,t+i*0.09);
+          g.gain.setValueAtTime(0.11,t+i*0.09); g.gain.exponentialRampToValueAtTime(0.001,t+i*0.09+0.3); o.connect(g); g.connect(ctx.destination); o.start(t+i*0.09); o.stop(t+i*0.09+0.32);
+        });
+      }
+    }
+    function updateAudio(nowMs){
+      const tr = getBgTrack();
+      if(!state.active || state.muted){
+        if(engine &amp;&amp; actx) try{ engine.g.gain.setTargetAtTime(0.0001, actx.currentTime, 0.05); }catch(e){}
+        if(tr &amp;&amp; !tr.paused) try{ tr.pause(); }catch(e){}
+        return;
+      }
+      if(tr){
+        if(state.musicMuted){
+          if(!tr.paused) try{ tr.pause(); }catch(e){}
+        } else {
+          tr.volume = state.status===&quot;nitro&quot; ? 0.55 : state.status===&quot;stopped&quot; ? 0.28 : 0.42;
+          if(tr.paused) tr.play().catch(function(){ bgTrackFailed=true; });
+        }
+      }
+      const ctx = unlockAudio(); if(!ctx || ctx.state === &quot;suspended&quot;) return;
+      if(bgTrackFailed &amp;&amp; !state.musicMuted &amp;&amp; nowMs - lastSynthBeat >= 220){
+        lastSynthBeat = nowMs;
+        const bassNotes = [110, 110, 146.83, 130.81, 110, 164.81, 146.83, 123.47];
+        const freq = bassNotes[beatStep % bassNotes.length];
+        const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+        o.type=&quot;triangle&quot;; o.frequency.setValueAtTime(freq,t);
+        g.gain.setValueAtTime(0.001,t); g.gain.linearRampToValueAtTime(state.status===&quot;nitro&quot;?0.07:0.045,t+0.015); g.gain.exponentialRampToValueAtTime(0.001,t+0.19);
+        o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.2);
+        beatStep++;
+      }
+      if(state.vehicle===&quot;car&quot;){
+        if(!engine){
+          const o1=ctx.createOscillator(), o2=ctx.createOscillator(), f=ctx.createBiquadFilter(), g=ctx.createGain();
+          o1.type=&quot;sawtooth&quot;; o2.type=&quot;triangle&quot;; f.type=&quot;lowpass&quot;; g.gain.setValueAtTime(0.0001,ctx.currentTime);
+          o1.connect(f); o2.connect(f); f.connect(g); g.connect(ctx.destination); o1.start(); o2.start();
+          engine={o1,o2,f,g};
+        }
+        const stop=state.status===&quot;stopped&quot;||state.speed<=1, nitro=state.status===&quot;nitro&quot;;
+        const bf=stop?38:48+state.speed*0.52+(nitro?18:0);
+        engine.o1.frequency.setTargetAtTime(bf,ctx.currentTime,0.08);
+        engine.o2.frequency.setTargetAtTime(bf*1.98,ctx.currentTime,0.08);
+        engine.f.frequency.setTargetAtTime(stop?110:nitro?540:210+state.speed*1.4,ctx.currentTime,0.08);
+        engine.g.gain.setTargetAtTime(stop?0.012:nitro?0.07:0.04,ctx.currentTime,0.08);
+      } else {
+        if(engine) engine.g.gain.setTargetAtTime(0.0001,ctx.currentTime,0.04);
+        if(state.status!==&quot;stopped&quot; &amp;&amp; state.speed>1){
+          const gap=state.status===&quot;nitro&quot;?165:Math.max(210,440-state.speed*2.2);
+          if(nowMs-lastHoof>=gap){ lastHoof=nowMs; playHoof(state.status===&quot;nitro&quot;); }
+        }
+      }
+    }
+
+    const TROPHY_META = {
+      easy: {
+        label: &quot;Santai&quot;,
+        title: &quot;Trofi Gangsa Sabit&quot;,
+        color: &quot;#FDBA74&quot;,
+        border: &quot;rgba(217,119,6,0.65)&quot;,
+        bg: &quot;linear-gradient(135deg, rgba(120,53,15,0.9), #020617)&quot;,
+        flash: &quot;radial-gradient(circle at 50% 32%, rgba(245,158,11,0.55), rgba(16,185,129,0.28) 52%, rgba(15,23,42,0) 85%)&quot;,
+        palette: [&quot;#F59E0B&quot;,&quot;#FDE68A&quot;,&quot;#10B981&quot;,&quot;#FB923C&quot;,&quot;#F8FAFC&quot;],
+        svg: '<svg class=&quot;float&quot; viewBox=&quot;0 0 96 96&quot; width=&quot;64&quot; height=&quot;64&quot;><circle cx=&quot;48&quot; cy=&quot;44&quot; r=&quot;34&quot; fill=&quot;rgba(217,119,6,0.2)&quot;/><path d=&quot;M28 28 H68 L63 50 C61 60 55 66 48 66 C41 66 35 60 33 50 Z&quot; fill=&quot;#D97706&quot; stroke=&quot;#FED7AA&quot; stroke-width=&quot;2&quot;/><path d=&quot;M28 32 C18 32 18 48 29 48&quot; fill=&quot;none&quot; stroke=&quot;#F59E0B&quot; stroke-width=&quot;3.5&quot; stroke-linecap=&quot;round&quot;/><path d=&quot;M68 32 C78 32 78 48 67 48&quot; fill=&quot;none&quot; stroke=&quot;#F59E0B&quot; stroke-width=&quot;3.5&quot; stroke-linecap=&quot;round&quot;/><rect x=&quot;44&quot; y=&quot;66&quot; width=&quot;8&quot; height=&quot;10&quot; fill=&quot;#B45309&quot;/><rect x=&quot;33&quot; y=&quot;76&quot; width=&quot;30&quot; height=&quot;7&quot; rx=&quot;3&quot; fill=&quot;#92400E&quot; stroke=&quot;#FDBA74&quot; stroke-width=&quot;1.5&quot;/><path d=&quot;M52 38 A9 9 0 1 0 52 54 A7 7 0 1 1 52 38 Z&quot; fill=&quot;#FEF3C7&quot;/></svg>'
+      },
+      medium: {
+        label: &quot;Sederhana&quot;,
+        title: &quot;Trofi Perak Bintang&quot;,
+        color: &quot;#7DD3FC&quot;,
+        border: &quot;rgba(56,189,248,0.65)&quot;,
+        bg: &quot;linear-gradient(135deg, rgba(12,74,110,0.9), #020617)&quot;,
+        flash: &quot;radial-gradient(circle at 50% 32%, rgba(56,189,248,0.56), rgba(16,185,129,0.28) 52%, rgba(15,23,42,0) 85%)&quot;,
+        palette: [&quot;#38BDF8&quot;,&quot;#E2E8F0&quot;,&quot;#34D399&quot;,&quot;#FBBF24&quot;,&quot;#818CF8&quot;],
+        svg: '<svg class=&quot;float&quot; viewBox=&quot;0 0 96 96&quot; width=&quot;64&quot; height=&quot;64&quot;><circle cx=&quot;48&quot; cy=&quot;44&quot; r=&quot;36&quot; fill=&quot;rgba(56,189,248,0.2)&quot;/><path d=&quot;M25 26 H71 L65 51 C62 62 55 67 48 67 C41 67 34 62 31 51 Z&quot; fill=&quot;#94A3B8&quot; stroke=&quot;#E0F2FE&quot; stroke-width=&quot;2&quot;/><path d=&quot;M26 30 C14 29 14 48 28 50&quot; fill=&quot;none&quot; stroke=&quot;#38BDF8&quot; stroke-width=&quot;3.5&quot; stroke-linecap=&quot;round&quot;/><path d=&quot;M70 30 C82 29 82 48 68 50&quot; fill=&quot;none&quot; stroke=&quot;#38BDF8&quot; stroke-width=&quot;3.5&quot; stroke-linecap=&quot;round&quot;/><path d=&quot;M48 14 L51 20 L58 21 L53 25 L54 32 L48 29 L42 32 L43 25 L38 21 L45 20 Z&quot; fill=&quot;#38BDF8&quot; stroke=&quot;#E0F2FE&quot; stroke-width=&quot;1.2&quot;/><path d=&quot;M51 39 A8 8 0 1 0 51 53 A6.2 6.2 0 1 1 51 39 Z&quot; fill=&quot;#0EA5E9&quot;/><rect x=&quot;43&quot; y=&quot;67&quot; width=&quot;10&quot; height=&quot;9&quot; fill=&quot;#64748B&quot;/><rect x=&quot;30&quot; y=&quot;76&quot; width=&quot;36&quot; height=&quot;8&quot; rx=&quot;3&quot; fill=&quot;#1E293B&quot; stroke=&quot;#94A3B8&quot; stroke-width=&quot;1.6&quot;/></svg>'
+      },
+      hard: {
+        label: &quot;Pantas&quot;,
+        title: &quot;Trofi Emas Diraja&quot;,
+        color: &quot;#FDE047&quot;,
+        border: &quot;rgba(250,204,21,0.8)&quot;,
+        bg: &quot;linear-gradient(135deg, rgba(113,63,18,0.92), #020617)&quot;,
+        flash: &quot;radial-gradient(circle at 50% 32%, rgba(250,204,21,0.6), rgba(16,185,129,0.32) 55%, rgba(15,23,42,0) 85%)&quot;,
+        palette: [&quot;#FACC15&quot;,&quot;#10B981&quot;,&quot;#F43F5E&quot;,&quot;#38BDF8&quot;,&quot;#FEF08A&quot;,&quot;#FFFFFF&quot;],
+        svg: '<svg class=&quot;float&quot; viewBox=&quot;0 0 96 96&quot; width=&quot;64&quot; height=&quot;64&quot;><circle cx=&quot;48&quot; cy=&quot;44&quot; r=&quot;38&quot; fill=&quot;rgba(250,204,21,0.24)&quot;/><path d=&quot;M16 34 L26 28 L28 45 L17 44 Z&quot; fill=&quot;#FACC15&quot; opacity=&quot;0.85&quot;/><path d=&quot;M80 34 L70 28 L68 45 L79 44 Z&quot; fill=&quot;#FACC15&quot; opacity=&quot;0.85&quot;/><path d=&quot;M29 22 L38 15 L48 22 L58 15 L67 22 L66 28 H30 Z&quot; fill=&quot;#FDE047&quot; stroke=&quot;#FEF9C3&quot; stroke-width=&quot;1.4&quot;/><path d=&quot;M27 28 H69 L63 52 C60 63 54 68 48 68 C42 68 36 63 33 52 Z&quot; fill=&quot;#FACC15&quot; stroke=&quot;#FEF9C3&quot; stroke-width=&quot;2&quot;/><path d=&quot;M27 32 C15 31 15 51 30 52&quot; fill=&quot;none&quot; stroke=&quot;#FEF08A&quot; stroke-width=&quot;3.5&quot; stroke-linecap=&quot;round&quot;/><path d=&quot;M69 32 C81 31 81 51 66 52&quot; fill=&quot;none&quot; stroke=&quot;#FEF08A&quot; stroke-width=&quot;3.5&quot; stroke-linecap=&quot;round&quot;/><path d=&quot;M51 38 A8.5 8.5 0 1 0 51 54 A6.5 6.5 0 1 1 51 38 Z&quot; fill=&quot;#78350F&quot;/><circle cx=&quot;48&quot; cy=&quot;46&quot; r=&quot;3.2&quot; fill=&quot;#10B981&quot; stroke=&quot;#FEF9C3&quot; stroke-width=&quot;1&quot;/><rect x=&quot;43&quot; y=&quot;68&quot; width=&quot;10&quot; height=&quot;8&quot; fill=&quot;#D97706&quot;/><rect x=&quot;28&quot; y=&quot;76&quot; width=&quot;40&quot; height=&quot;9&quot; rx=&quot;3&quot; fill=&quot;#78350F&quot; stroke=&quot;#FACC15&quot; stroke-width=&quot;1.8&quot;/></svg>'
+      }
+    };
+    const LOSS_SUN_SVG = '<svg viewBox=&quot;0 0 64 64&quot; width=&quot;46&quot; height=&quot;46&quot;><circle cx=&quot;32&quot; cy=&quot;34&quot; r=&quot;14&quot; fill=&quot;#F59E0B&quot; opacity=&quot;0.9&quot;/><path d=&quot;M10 46 H54&quot; stroke=&quot;#FB923C&quot; stroke-width=&quot;3&quot; stroke-linecap=&quot;round&quot;/></svg>';
+
+    let confettiRaf = 0, confettiPieces = [];
+    const $ = function(id){ return document.getElementById(id); };
+
+    function stopCelebration(){
+      if(confettiRaf){ cancelAnimationFrame(confettiRaf); confettiRaf = 0; }
+      confettiPieces = [];
+      const fl = $(&quot;lkr-victory-flash&quot;), cc = $(&quot;lkr-confetti&quot;);
+      if(fl){ fl.className = &quot;lkr-victory-flash&quot;; fl.style.background = &quot;&quot;; }
+      if(cc){ cc.className = &quot;&quot;; const cctx = cc.getContext(&quot;2d&quot;); if(cctx) cctx.clearRect(0,0,cc.width,cc.height); }
+    }
+
+    function startCelebration(diffKey){
+      stopCelebration();
+      const meta = TROPHY_META[diffKey] || TROPHY_META.medium;
+      const fl = $(&quot;lkr-victory-flash&quot;), cc = $(&quot;lkr-confetti&quot;), app = $(&quot;lkr-app&quot;);
+      if(fl){ fl.style.background = meta.flash; fl.className = &quot;lkr-victory-flash show&quot;; }
+      if(!cc || !app) return;
+      const cctx = cc.getContext(&quot;2d&quot;); if(!cctx) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = app.clientWidth || 640, h = app.clientHeight || 500;
+      cc.width = Math.floor(w * dpr); cc.height = Math.floor(h * dpr);
+      cctx.setTransform(dpr,0,0,dpr,0,0);
+      cc.className = &quot;show&quot;;
+      function burst(n, yRatio){
+        for(let i=0;i<n;i++){
+          const left = i % 2 === 0;
+          const ox = left ? w * (0.15 + Math.random()*0.25) : w * (0.6 + Math.random()*0.25);
+          const ang = -Math.PI/2 + (Math.random()-0.5)*1.15;
+          const spd = 4.2 + Math.random()*7.5;
+          confettiPieces.push({
+            x:ox, y:h*yRatio, vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd-1.2,
+            s:5+Math.random()*5, a:0.45+Math.random()*0.55, r:Math.random()*6.28, vr:(Math.random()-0.5)*0.22,
+            c:meta.palette[i % meta.palette.length], al:1, sw:Math.random()*6.28
+          });
+        }
+      }
+      burst(75, 0.56);
+      setTimeout(function(){ if(state.view===&quot;summary&quot;) burst(55, 0.34); }, 420);
+      const t0 = performance.now();
+      function stepConfetti(now){
+        const el = now - t0;
+        cctx.clearRect(0,0,w,h);
+        for(let i=confettiPieces.length-1;i>=0;i--){
+          const p = confettiPieces[i];
+          p.sw += 0.08; p.vx *= 0.99; p.vy += 0.16; p.x += p.vx + Math.sin(p.sw)*0.65; p.y += p.vy; p.r += p.vr;
+          if(el > 3000) p.al = Math.max(0, p.al - 0.022);
+          if(p.al <= 0 || p.y > h + 24){ confettiPieces.splice(i,1); continue; }
+          cctx.save(); cctx.globalAlpha = p.al; cctx.translate(p.x,p.y); cctx.rotate(p.r);
+          cctx.fillStyle = p.c; cctx.fillRect(-p.s/2, -p.s*p.a/2, p.s, p.s*p.a); cctx.restore();
+        }
+        if(confettiPieces.length > 0 &amp;&amp; el < 5200 &amp;&amp; state.view === &quot;summary&quot;){
+          confettiRaf = requestAnimationFrame(stepConfetti);
+        } else {
+          cctx.clearRect(0,0,w,h);
+          confettiRaf = 0;
+        }
+      }
+      confettiRaf = requestAnimationFrame(stepConfetti);
+    }
+
+    function showView(v){
+      if(v !== &quot;summary&quot;) stopCelebration();
+      state.view = v;
+      $(&quot;view-menu&quot;).style.display = v===&quot;menu&quot; ? &quot;flex&quot; : &quot;none&quot;;
+      $(&quot;view-play&quot;).style.display = v===&quot;play&quot; ? &quot;flex&quot; : &quot;none&quot;;
+      $(&quot;view-summary&quot;).style.display = v===&quot;summary&quot; ? &quot;flex&quot; : &quot;none&quot;;
+      $(&quot;view-board&quot;).style.display = v===&quot;board&quot; ? &quot;flex&quot; : &quot;none&quot;;
+      $(&quot;view-notes&quot;).style.display = v===&quot;notes&quot; ? &quot;flex&quot; : &quot;none&quot;;
+      $(&quot;nav-arena&quot;).className = (v!==&quot;board&quot; &amp;&amp; v!==&quot;notes&quot;) ? &quot;active&quot; : &quot;&quot;;
+      $(&quot;nav-board&quot;).className = v===&quot;board&quot; ? &quot;active&quot; : &quot;&quot;;
+      $(&quot;nav-notes&quot;).className = v===&quot;notes&quot; ? &quot;active&quot; : &quot;&quot;;
+      $(&quot;header-cta&quot;).textContent = v===&quot;play&quot; ? &quot;Tamat Lumba&quot; : &quot;Mula Lumba&quot;;
+    }
+
+    function renderCarOptions(){
+      const wrap = $(&quot;lkr-cars&quot;); wrap.innerHTML = &quot;&quot;;
+      CARS.forEach(function(c){
+        const btn = document.createElement(&quot;button&quot;);
+        btn.type = &quot;button&quot;;
+        btn.className = &quot;lkr-car-card&quot; + (state.vehicle===&quot;car&quot; &amp;&amp; state.carId===c.id ? &quot; active&quot; : &quot;&quot;);
+
+        const fb = document.createElement(&quot;div&quot;);
+        fb.className = &quot;lkr-car-fallback&quot;;
+        fb.textContent = c.name;
+
+        const img = document.createElement(&quot;img&quot;);
+        img.src = c.imageUrl;
+        img.alt = c.name;
+        img.referrerPolicy = &quot;no-referrer&quot;;
+        img.addEventListener(&quot;error&quot;, function(){ img.style.display = &quot;none&quot;; });
+
+        const cap = document.createElement(&quot;div&quot;);
+        cap.className = &quot;cap&quot;;
+        cap.textContent = c.name;
+
+        btn.appendChild(fb);
+        btn.appendChild(img);
+        btn.appendChild(cap);
+        btn.addEventListener(&quot;click&quot;, function(){
+          unlockAudio();
+          playUi(&quot;select&quot;);
+          state.vehicle=&quot;car&quot;; state.carId=c.id; renderCarOptions();
+        });
+        wrap.appendChild(btn);
+      });
+      $(&quot;lkr-camel-btn&quot;).className = &quot;lkr-camel-btn&quot; + (state.vehicle===&quot;camel&quot; ? &quot; active&quot; : &quot;&quot;);
+      $(&quot;lkr-camel-check&quot;).style.display = state.vehicle===&quot;camel&quot; ? &quot;inline&quot; : &quot;none&quot;;
+    }
+
+    function loadLeaderboard(){
+      try{
+        const parsed = JSON.parse(localStorage.getItem(STORE_KEY) || &quot;null&quot;);
+        if(Array.isArray(parsed) &amp;&amp; parsed.length) return parsed;
+      }catch(e){}
+      return memoryBoard;
+    }
+
+    function renderLeaderboard(){
+      const all = loadLeaderboard();
+      const list = state.boardFilter === &quot;all&quot; ? all : all.filter(function(e){ return e.vehicle === state.boardFilter; });
+      if(!list.length){
+        $(&quot;board-body&quot;).innerHTML = '<tr><td colspan=&quot;6&quot; style=&quot;text-align:center;color:#94A3B8;padding:18px;&quot;>Tiada rekod untuk kategori ini.</td></tr>';
+        return;
+      }
+      $(&quot;board-body&quot;).innerHTML = list.slice(0,10).map(function(e,i){
+        const diffLabel = e.difficulty===&quot;easy&quot;?&quot;Santai&quot;:e.difficulty===&quot;hard&quot;?&quot;Pantas&quot;:&quot;Sederhana&quot;;
+        return '<tr><td style=&quot;color:#FBBF24;font-weight:700;&quot;>#'+(i+1)+'</td><td>'+e.playerName+'</td><td>'+(e.vehicle===&quot;car&quot;?(e.carName||&quot;Kereta Sport&quot;):&quot;Unta Gurun&quot;)+'</td><td>'+diffLabel+'</td><td>'+e.accuracy+'%</td><td style=&quot;text-align:right;font-weight:700;color:#FDE68A;&quot;>'+e.score+'</td></tr>';
+      }).join(&quot;&quot;);
+    }
+
+    function renderQuestion(){
+      const q = state.deck[state.qIdx]; if(!q) return;
+      state.answered = false;
+      $(&quot;q-meta&quot;).textContent = &quot;Soalan &quot; + (state.qIdx+1) + &quot; · &quot; + q.category;
+      $(&quot;q-status&quot;).textContent = state.status===&quot;nitro&quot; ? &quot;Kuasa Nitro Aktif!&quot; : state.status===&quot;stopped&quot; ? &quot;Terhenti 2s&quot; : &quot;Tekan A-D / 1-4&quot;;
+      $(&quot;q-text&quot;).textContent = q.question;
+      $(&quot;q-fb&quot;).textContent = &quot;Jawab betul untuk kuasa Nitro · Jawab salah terhenti 2 saat&quot;;
+      $(&quot;q-fb&quot;).style.color = &quot;#475569&quot;;
+      const opts = $(&quot;q-opts&quot;); opts.innerHTML = &quot;&quot;;
+      [&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;].forEach(function(key, idx){
+        const b = document.createElement(&quot;button&quot;);
+        b.type = &quot;button&quot;; b.className = &quot;lkr-opt&quot;;
+        b.innerHTML = '<span class=&quot;lkr-opt-key&quot;>'+key+'</span><span>'+q.options[idx]+'</span>';
+        b.addEventListener(&quot;click&quot;, function(){ handleAnswer(idx); });
+        opts.appendChild(b);
+      });
+    }
+
+    function handleAnswer(idx){
+      if(!state.active || state.answered) return;
+      unlockAudio();
+      const q = state.deck[state.qIdx]; state.answered = true;
+      $(&quot;q-opts&quot;).querySelectorAll(&quot;button&quot;).forEach(function(b,i){
+        b.disabled = true;
+        if(i===q.correctIndex) b.classList.add(&quot;correct&quot;);
+        else if(i===idx) b.classList.add(&quot;wrong&quot;);
+      });
+      if(idx===q.correctIndex){
+        state.correct++; state.streak++; state.bestStreak = Math.max(state.bestStreak, state.streak);
+        state.speed = NITRO_SPEED + Math.min((state.streak-1)*6, 24);
+        state.topSpeed = Math.max(state.topSpeed, state.speed);
+        state.status = &quot;nitro&quot;; state.statusTimer = 2.6;
+        $(&quot;q-fb&quot;).textContent = &quot;Betul! Pecutan Nitro: &quot; + q.explanation;
+        $(&quot;q-fb&quot;).style.color = &quot;#065F46&quot;;
+        playSfx(&quot;nitro&quot;);
+      } else {
+        state.wrong++; state.streak = 0; state.speed = 0; state.status = &quot;stopped&quot;; state.statusTimer = 2.0;
+        $(&quot;q-fb&quot;).textContent = &quot;Salah! Berhenti 2s: &quot; + q.explanation;
+        $(&quot;q-fb&quot;).style.color = &quot;#991B1B&quot;;
+        playSfx(&quot;wrong&quot;);
+      }
+      setTimeout(function(){
+        if(!state.active) return;
+        state.qIdx = (state.qIdx+1) % state.deck.length;
+        renderQuestion();
+      }, 1100);
+    }
+
+    function finishRace(winner){
+      state.active = false; stopAudio();
+      const total = state.correct + state.wrong, acc = total ? Math.round((state.correct/total)*100) : 0;
+      const score = Math.max(0, Math.round((state.playerDist*0.5 + state.correct*85 - state.wrong*15 + (total?(state.correct/total)*250:0) + state.bestStreak*30 + (winner===&quot;player&quot;?450+state.timeRem*16:0))*DIFF_CFG[state.diff].mult));
+      const carObj = CARS.find(function(c){ return c.id===state.carId; }) || CARS[0];
+      const entry = {
+        id:&quot;run-&quot;+Date.now(),
+        playerName:($(&quot;lkr-name&quot;).value.trim()||&quot;Pelumba Tetamu&quot;),
+        vehicle:state.vehicle,
+        carName:state.vehicle===&quot;car&quot;?carObj.name:undefined,
+        difficulty:state.diff,
+        score:score,
+        accuracy:acc,
+        timeRemaining:Number(state.timeRem.toFixed(1)),
+        won:winner===&quot;player&quot;
+      };
+      memoryBoard = [entry].concat(loadLeaderboard()).sort(function(a,b){ return b.score-a.score; }).slice(0,25);
+      try{ localStorage.setItem(STORE_KEY, JSON.stringify(memoryBoard)); }catch(e){}
+
+      const tMeta = TROPHY_META[state.diff] || TROPHY_META.medium;
+      const won = winner === &quot;player&quot;;
+      $(&quot;view-summary&quot;).className = won ? &quot;lkr-panel won&quot; : &quot;lkr-panel&quot;;
+      const tBox = $(&quot;sum-trophy&quot;);
+      if(won){
+        tBox.className = &quot;lkr-trophy-box pop&quot;;
+        tBox.style.borderColor = tMeta.border;
+        tBox.style.background = tMeta.bg;
+        tBox.innerHTML = tMeta.svg;
+      } else {
+        tBox.className = &quot;lkr-trophy-box&quot;;
+        tBox.style.borderColor = &quot;#334155&quot;;
+        tBox.style.background = &quot;#020617&quot;;
+        tBox.innerHTML = LOSS_SUN_SVG;
+      }
+      $(&quot;sum-sub&quot;).style.color = won ? tMeta.color : &quot;#FBBF24&quot;;
+      $(&quot;sum-sub&quot;).textContent = entry.playerName + &quot; · &quot; + (state.vehicle===&quot;car&quot;?carObj.name:&quot;Unta Gurun&quot;) + &quot; · Tahap &quot; + tMeta.label + (won ? &quot; · &quot; + tMeta.title : &quot;&quot;);
+      $(&quot;sum-title&quot;).textContent = won ? &quot;Tahniah! Anda Menjuarai Perlumbaan!&quot; : winner===&quot;ai&quot; ? &quot;AI Senja Mendahului di Garisan Penamat&quot; : &quot;Matahari Telah Terbenam&quot;;
+      $(&quot;sum-desc&quot;).textContent = won ? &quot;Anda menewaskan AI Senja dengan baki &quot; + state.timeRem.toFixed(1) + &quot;s sebelum Maghrib.&quot; : &quot;Cuba tingkatkan ketepatan jawapan untuk memecut dengan kuasa Nitro.&quot;;
+      $(&quot;sum-score&quot;).textContent = score.toLocaleString();
+      $(&quot;sum-acc&quot;).textContent = acc + &quot;%&quot;;
+      $(&quot;sum-top&quot;).textContent = Math.round(state.topSpeed) + &quot; km/j&quot;;
+      $(&quot;sum-rem&quot;).textContent = state.timeRem.toFixed(1) + &quot;s&quot;;
+      showView(&quot;summary&quot;);
+      if(won){ playSfx(&quot;win&quot;); startCelebration(state.diff); }
+    }
+
+    const canvas = $(&quot;lkr-canvas&quot;), ctx = canvas.getContext(&quot;2d&quot;), particles = [];
+    let tick = 0, lastTs = performance.now();
+
+    function drawCar(x, y, isPlayer, speed, carId, sunsetProgress){
+      const isNitro = isPlayer &amp;&amp; state.status===&quot;nitro&quot;;
+      let nx=0, ny=0, tilt=0;
+      if(isNitro){
+        if(carId===&quot;car-gt&quot;){ ny=Math.sin(tick*0.28)*2.2; tilt=-0.07+Math.sin(tick*0.45)*0.025; }
+        else if(carId===&quot;car-drift&quot;){ nx=3; tilt=-0.055; }
+        else if(carId===&quot;car-ferrari&quot;){ nx=Math.sin(tick*0.5)*3.4+2; tilt=-0.04; }
+        else if(carId===&quot;car-hyper&quot;){ nx=Math.cos(tick*1.1)*1.3; ny=Math.sin(tick*1.2)*1.6; tilt=-0.065; }
+      }
+      ctx.save(); ctx.translate(x+nx, y+ny);
+      ctx.scale(isPlayer?1.15:0.96, isPlayer?1.15:0.96);
+      ctx.translate(0, speed>5 ? Math.sin(tick*0.35)*(isNitro?1.6:0.9) : 0);
+      if(tilt!==0) ctx.rotate(tilt);
+      ctx.fillStyle = &quot;rgba(0,0,0,0.35)&quot;; ctx.beginPath(); ctx.ellipse(0,17,46,7,0,0,Math.PI*2); ctx.fill();
+
+      if(isNitro){
+        ctx.save(); ctx.globalCompositeOperation=&quot;lighter&quot;;
+        if(carId===&quot;car-gt&quot;){
+          ctx.fillStyle=&quot;rgba(34,211,238,0.75)&quot;; ctx.beginPath(); ctx.ellipse(0,14,42,4.5,0,0,Math.PI*2); ctx.fill();
+        } else if(carId===&quot;car-drift&quot;){
+          for(let r=0;r<3;r++){
+            const wp=(tick*0.14+r*0.33)%1;
+            ctx.strokeStyle=&quot;rgba(56,189,248,&quot;+((1-wp)*0.72)+&quot;)&quot;; ctx.lineWidth=2;
+            ctx.beginPath(); ctx.arc(26-wp*84,-4,16+wp*16,Math.PI*0.65,Math.PI*1.35); ctx.stroke();
+          }
+        } else if(carId===&quot;car-ferrari&quot;){
+          ctx.strokeStyle=&quot;rgba(239,68,68,0.78)&quot;; ctx.lineWidth=2;
+          for(let s=0;s<3;s++){
+            const sx=-40-((tick*6+s*14)%34);
+            ctx.beginPath(); ctx.moveTo(sx,-13+s*9); ctx.lineTo(sx-22,-13+s*9); ctx.stroke();
+          }
+        } else if(carId===&quot;car-hyper&quot; &amp;&amp; tick%7<3){
+          ctx.fillStyle=&quot;rgba(251,146,60,0.68)&quot;; ctx.beginPath(); ctx.arc(-48,4,13,0,Math.PI*2); ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      if(isPlayer &amp;&amp; speed>15){
+        const smokeCount = isNitro ? 5 : 2;
+        for(let si=0;si<smokeCount;si++){
+          const cy = (tick*(isNitro?0.32:0.16)+si*1.4)%5;
+          const sx = -30-cy*10, sy = 10-cy*2.2, sr = 4.5+cy*(isNitro?2.2:1.4), al = Math.max(0,0.45-cy*0.09);
+          ctx.fillStyle = (isNitro &amp;&amp; carId===&quot;car-gt&quot;) ? &quot;rgba(186,230,253,&quot;+al+&quot;)&quot; : &quot;rgba(203,213,225,&quot;+al+&quot;)&quot;;
+          ctx.beginPath(); ctx.arc(sx,sy,sr,0,Math.PI*2); ctx.fill();
+          if(isNitro &amp;&amp; si%2===0){
+            ctx.fillStyle = carId===&quot;car-gt&quot; ? &quot;rgba(34,211,238,0.9)&quot; : carId===&quot;car-drift&quot; ? &quot;rgba(250,204,21,0.85)&quot; : &quot;rgba(249,115,22,0.85)&quot;;
+            ctx.fillRect(sx-2, sy+2, 4, 1.5);
+          }
+        }
+      }
+
+      if((sunsetProgress>0.25 &amp;&amp; speed>0) || (isNitro &amp;&amp; carId===&quot;car-ferrari&quot;)){
+        const ba = (isNitro &amp;&amp; carId===&quot;car-ferrari&quot;) ? 0.52 : Math.min(0.42,(sunsetProgress-0.25)*0.55);
+        const bg = ctx.createLinearGradient(44,0,165,0);
+        bg.addColorStop(0,&quot;rgba(254,240,138,&quot;+ba+&quot;)&quot;); bg.addColorStop(1,&quot;rgba(254,240,138,0)&quot;);
+        ctx.fillStyle=bg; ctx.beginPath(); ctx.moveTo(44,-2); ctx.lineTo(165,-20); ctx.lineTo(165,18); ctx.lineTo(44,6); ctx.closePath(); ctx.fill();
+      }
+
+      if(carId===&quot;car-gt&quot;){
+        ctx.fillStyle=&quot;#F8FAFC&quot;; ctx.beginPath(); ctx.moveTo(-44,10); ctx.lineTo(-45,-6); ctx.lineTo(-26,-9); ctx.lineTo(-14,-21); ctx.lineTo(14,-21); ctx.lineTo(30,-8); ctx.lineTo(46,-5); ctx.lineTo(48,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=&quot;#CBD5E1&quot;; ctx.fillRect(-44,4,92,6);
+        ctx.fillStyle=&quot;#0F172A&quot;; ctx.beginPath(); ctx.moveTo(-22,-8); ctx.lineTo(-12,-19); ctx.lineTo(13,-19); ctx.lineTo(26,-8); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=&quot;#E2E8F0&quot;; ctx.fillRect(-2,-19,3,11);
+        ctx.fillStyle=&quot;#FEF08A&quot;; ctx.fillRect(42,-4,5,5);
+        ctx.fillStyle=&quot;#DC2626&quot;; ctx.fillRect(-45,-4,4,6);
+      } else if(carId===&quot;car-drift&quot;){
+        ctx.fillStyle=&quot;#0F172A&quot;; ctx.fillRect(-41,-19,3,12);
+        ctx.save(); ctx.translate(-40,-20); if(isNitro) ctx.rotate(0.24);
+        ctx.fillStyle=isNitro?&quot;#38BDF8&quot;:&quot;#0284C7&quot;; ctx.fillRect(-9,-3,16,4); ctx.restore();
+        ctx.fillStyle=&quot;#0EA5E9&quot;; ctx.beginPath(); ctx.moveTo(-43,10); ctx.lineTo(-44,-5); ctx.quadraticCurveTo(-30,-11,-17,-20); ctx.quadraticCurveTo(-2,-25,14,-18); ctx.quadraticCurveTo(30,-10,46,-2); ctx.lineTo(47,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=&quot;#0369A1&quot;; ctx.fillRect(-43,3,90,7);
+        ctx.fillStyle=&quot;#0F172A&quot;; ctx.beginPath(); ctx.moveTo(-20,-8); ctx.quadraticCurveTo(-8,-20,9,-17); ctx.lineTo(23,-8); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=&quot;#FEF9C3&quot;; ctx.beginPath(); ctx.ellipse(40,-3,5,3,-0.3,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle=&quot;#EF4444&quot;; ctx.fillRect(-45,-4,6,3);
+      } else if(carId===&quot;car-ferrari&quot;){
+        ctx.fillStyle=&quot;#F8FAFC&quot;; ctx.fillRect(-45,-22,12,4); ctx.fillRect(-44,-19,4,14);
+        ctx.beginPath(); ctx.moveTo(-44,10); ctx.lineTo(-45,-6); ctx.lineTo(-20,-8); ctx.lineTo(-6,-20); ctx.lineTo(13,-20); ctx.lineTo(31,-9); ctx.lineTo(48,-1); ctx.lineTo(48,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=&quot;#0F172A&quot;; ctx.fillRect(-44,6,94,4);
+        ctx.fillStyle=&quot;#DC2626&quot;; ctx.beginPath(); ctx.arc(-2,0,5.2,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle=&quot;#0F172A&quot;; ctx.beginPath(); ctx.moveTo(-14,-7); ctx.lineTo(-4,-18); ctx.lineTo(12,-18); ctx.lineTo(26,-7); ctx.closePath(); ctx.fill();
+        if(isNitro){
+          ctx.fillStyle=tick%4<2?&quot;#EF4444&quot;:&quot;#FCA5A5&quot;; ctx.fillRect(-34,-7,12,3);
+          ctx.fillStyle=&quot;#FFFFFF&quot;; ctx.fillRect(40,-10,5,4);
+        }
+        ctx.fillStyle=&quot;#FEF08A&quot;; ctx.fillRect(41,-3,6,4);
+        ctx.fillStyle=&quot;#DC2626&quot;; ctx.beginPath(); ctx.arc(-44,-1,3,0,Math.PI*2); ctx.fill();
+      } else if(carId===&quot;car-hyper&quot;){
+        ctx.fillStyle=&quot;#0F172A&quot;; ctx.fillRect(-43,-20,3,13);
+        ctx.fillStyle=&quot;#DC2626&quot;; ctx.fillRect(-47,-22,14,4);
+        ctx.beginPath(); ctx.moveTo(-44,10); ctx.lineTo(-45,-6); ctx.lineTo(-25,-9); ctx.lineTo(-12,-21); ctx.lineTo(15,-21); ctx.lineTo(31,-8); ctx.lineTo(47,-3); ctx.lineTo(48,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=&quot;#991B1B&quot;; ctx.fillRect(-44,3,92,4);
+        ctx.fillStyle=&quot;#0F172A&quot;; ctx.fillRect(27,-9,7,2); ctx.fillRect(-44,7,93,3);
+        if(isNitro &amp;&amp; tick%5<3){ ctx.fillStyle=&quot;#FACC15&quot;; ctx.beginPath(); ctx.moveTo(27,-9); ctx.lineTo(16,-14); ctx.lineTo(31,-9); ctx.closePath(); ctx.fill(); }
+        ctx.fillStyle=&quot;#0F172A&quot;;
+        ctx.beginPath(); ctx.moveTo(-21,-8); ctx.lineTo(-10,-19); ctx.lineTo(14,-19); ctx.lineTo(26,-8); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=&quot;#FEF08A&quot;; ctx.fillRect(42,-2,6,4);
+        ctx.fillStyle=&quot;#F87171&quot;; ctx.fillRect(-45,-4,4,5);
+      } else {
+        ctx.fillStyle=&quot;#334155&quot;; ctx.beginPath(); ctx.moveTo(-40,10); ctx.lineTo(-42,-4); ctx.lineTo(-24,-8); ctx.lineTo(-10,-20); ctx.lineTo(16,-20); ctx.lineTo(33,-7); ctx.lineTo(44,-2); ctx.lineTo(44,10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=&quot;#0F172A&quot;; ctx.beginPath(); ctx.moveTo(-18,-7); ctx.lineTo(-8,-16); ctx.lineTo(14,-16); ctx.lineTo(26,-7); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=&quot;#FEF08A&quot;; ctx.fillRect(40,-3,5,4);
+      }
+
+      const wRot = (tick*speed*0.008)%(Math.PI*2);
+      const rim = carId===&quot;car-ferrari&quot;?&quot;#1E293B&quot;:carId===&quot;car-drift&quot;?&quot;#94A3B8&quot;:carId===&quot;car-hyper&quot;?&quot;#FACC15&quot;:&quot;#CBD5E1&quot;;
+      [-25,26].forEach(function(wx){
+        ctx.save(); ctx.translate(wx,10);
+        ctx.fillStyle=&quot;#090D16&quot;; ctx.beginPath(); ctx.arc(0,0,9.5,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle=rim; ctx.beginPath(); ctx.arc(0,0,5.2,0,Math.PI*2); ctx.fill();
+        if(carId===&quot;car-drift&quot;||carId===&quot;car-hyper&quot;){ ctx.fillStyle=carId===&quot;car-drift&quot;?&quot;#FACC15&quot;:&quot;#EF4444&quot;; ctx.fillRect(-4,-1.5,2,3); }
+        ctx.rotate(wRot); ctx.strokeStyle=carId===&quot;car-ferrari&quot;?&quot;#94A3B8&quot;:&quot;#1E293B&quot;; ctx.lineWidth=1.4;
+        ctx.beginPath(); ctx.moveTo(-4.2,0); ctx.lineTo(4.2,0); ctx.moveTo(0,-4.2); ctx.lineTo(0,4.2); ctx.stroke();
+        ctx.restore();
+      });
+      ctx.font=&quot;700 10px sans-serif&quot;; ctx.textAlign=&quot;center&quot;; ctx.fillStyle=isPlayer?&quot;#FDE68A&quot;:&quot;#CBD5E1&quot;;
+      ctx.fillText(isPlayer?&quot;ANDA&quot;:&quot;AI&quot;,0,-27);
+      ctx.restore();
+    }
+
+    function drawCamel(x, y, isPlayer, speed){
+      const isNitro = isPlayer &amp;&amp; state.status===&quot;nitro&quot;;
+      ctx.save(); ctx.translate(x, y);
+      const gallop = speed>2 ? Math.sin(tick*(isNitro?0.52:0.35)) : 0;
+      ctx.translate(0, speed>2 ? Math.abs(gallop)*-3.5 : 1);
+      if(isNitro){
+        ctx.strokeStyle=&quot;rgba(251,191,36,0.78)&quot;; ctx.lineWidth=2.2;
+        for(let i=0;i<3;i++){ const off=(tick*5+i*16)%40; ctx.beginPath(); ctx.moveTo(-30-off,-12+i*9); ctx.lineTo(-56-off,-12+i*9); ctx.stroke(); }
+      }
+      const coat=isPlayer?&quot;#D97706&quot;:&quot;#A16207&quot;, saddle=isPlayer?&quot;#059669&quot;:&quot;#334155&quot;;
+      ctx.fillStyle = coat;
+      ctx.beginPath(); ctx.moveTo(-22,3); ctx.quadraticCurveTo(-2,-26,10,-10); ctx.quadraticCurveTo(22,-8,22,2); ctx.quadraticCurveTo(0,10,-22,3); ctx.fill();
+      ctx.fillStyle=saddle; ctx.beginPath(); ctx.moveTo(-12,-11); ctx.quadraticCurveTo(-2,-22,8,-11); ctx.lineTo(9,-3); ctx.lineTo(-13,-3); ctx.closePath(); ctx.fill();
+      ctx.fillStyle=&quot;#FBBF24&quot;; ctx.fillRect(-11,-6,19,2.5);
+      ctx.strokeStyle=coat; ctx.lineWidth=7; ctx.beginPath(); ctx.moveTo(18,-1); ctx.quadraticCurveTo(27,-11,29,-22); ctx.stroke();
+      ctx.fillStyle=coat; ctx.beginPath(); ctx.ellipse(33,-23,7.5,4.5,0.1,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle=&quot;#0F172A&quot;; ctx.beginPath(); ctx.arc(34,-24.2,1.2,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle=coat; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(-14,3); ctx.lineTo(-14+gallop*9,17); ctx.moveTo(16,3); ctx.lineTo(16-gallop*9,17); ctx.stroke();
+      ctx.font=&quot;700 10px sans-serif&quot;; ctx.textAlign=&quot;center&quot;; ctx.fillStyle=isPlayer?&quot;#FDE68A&quot;:&quot;#CBD5E1&quot;;
+      ctx.fillText(isPlayer?&quot;ANDA&quot;:&quot;AI&quot;,0,-34);
+      ctx.restore();
+    }
+
+    function updatePlayBadges(){
+      const carObj = CARS.find(function(c){ return c.id===state.carId; }) || CARS[0];
+      const badge = $(&quot;car-badge&quot;);
+      if(state.vehicle===&quot;car&quot;){
+        badge.className = &quot;lkr-car-badge show&quot;;
+        $(&quot;car-badge-img&quot;).src = carObj.imageUrl;
+        $(&quot;car-badge-name&quot;).textContent = carObj.name;
+      } else {
+        badge.className = &quot;lkr-car-badge&quot;;
+      }
+
+      const nCard = $(&quot;nitro-card&quot;);
+      if(state.status===&quot;nitro&quot;){
+        nCard.className = &quot;lkr-nitro-card show&quot;;
+        if(state.vehicle===&quot;car&quot;){
+          $(&quot;nitro-img-wrap&quot;).style.display = &quot;block&quot;;
+          $(&quot;nitro-car-img&quot;).src = carObj.imageUrl;
+          $(&quot;nitro-title-txt&quot;).textContent = &quot;NITRO · &quot; + carObj.name;
+        } else {
+          $(&quot;nitro-img-wrap&quot;).style.display = &quot;none&quot;;
+          $(&quot;nitro-title-txt&quot;).textContent = &quot;PECUTAN UNTA AKTIF!&quot;;
+        }
+        $(&quot;nitro-speed-txt&quot;).textContent = Math.round(state.speed) + &quot; km/j&quot;;
+      } else {
+        nCard.className = &quot;lkr-nitro-card&quot;;
+      }
+    }
+
+    function loop(now){
+      tick++;
+      const dt = Math.min(0.05, (now-lastTs)/1000); lastTs = now;
+      if(state.active){
+        if(state.status!==&quot;normal&quot;){
+          state.statusTimer -= dt;
+          if(state.statusTimer<=0){ state.status=&quot;normal&quot;; state.speed=BASE_SPEED; }
+        }
+        state.playerDist += state.speed*SPEED_TO_MPS*dt;
+        state.bgOffset += state.speed*dt*4.2;
+        state.aiDist += DIFF_CFG[state.diff].ai*SPEED_TO_MPS*dt;
+        state.timeRem = Math.max(0, state.timeRem-dt);
+        updateAudio(now);
+
+        $(&quot;hud-time&quot;).textContent = state.timeRem.toFixed(1)+&quot;s&quot;;
+        $(&quot;hud-speed&quot;).textContent = Math.round(state.speed)+&quot; km/j&quot;;
+        $(&quot;hud-dist&quot;).textContent = Math.round(state.playerDist)+&quot;m / &quot;+Math.round(state.aiDist)+&quot;m&quot;;
+        updatePlayBadges();
+
+        if(state.playerDist>=FINISH_DIST) finishRace(&quot;player&quot;);
+        else if(state.aiDist>=FINISH_DIST) finishRace(&quot;ai&quot;);
+        else if(state.timeRem<=0) finishRace(&quot;sunset&quot;);
+      }
+
+      if(state.view===&quot;play&quot;){
+        const dpr = Math.min(window.devicePixelRatio||1, 2), w=canvas.clientWidth, h=canvas.clientHeight;
+        if(w>0 &amp;&amp; h>0){
+          if(canvas.width!==Math.floor(w*dpr) || canvas.height!==Math.floor(h*dpr)){
+            canvas.width=Math.floor(w*dpr); canvas.height=Math.floor(h*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
+          }
+          const sp=Math.max(0,Math.min(1,1-state.timeRem/Math.max(1,state.totalTime))), hy=h*0.5;
+          const sky=ctx.createLinearGradient(0,0,0,hy);
+          sky.addColorStop(0,sp>0.6?&quot;#0F172A&quot;:&quot;#1E293B&quot;); sky.addColorStop(1,sp>0.6?&quot;#9A3412&quot;:&quot;#F59E0B&quot;);
+          ctx.fillStyle=sky; ctx.fillRect(0,0,w,hy+4);
+
+          ctx.fillStyle=&quot;rgba(255,255,255,&quot;+(0.12+sp*0.78)+&quot;)&quot;;
+          for(let s=0;s<18;s++){ ctx.fillRect((s*137+30)%w, (s*47+12)%(hy*0.65), 1.5, 1.5); }
+
+          const mx=w*0.86, my=h*0.14;
+          ctx.fillStyle=&quot;#FDE68A&quot;; ctx.beginPath(); ctx.arc(mx,my,12,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle=sp>0.6?&quot;#0F172A&quot;:&quot;#1E293B&quot;; ctx.beginPath(); ctx.arc(mx+5,my-3,10,0,Math.PI*2); ctx.fill();
+
+          const sunY=hy*0.32+(hy*0.78)*sp;
+          ctx.fillStyle=&quot;#FDE047&quot;; ctx.beginPath(); ctx.arc(w*0.52,sunY,22,0,Math.PI*2); ctx.fill();
+
+          const farX=(state.bgOffset*0.2)%240;
+          ctx.fillStyle=&quot;#78350F&quot;; ctx.beginPath(); ctx.moveTo(0,hy+12);
+          for(let x=-240;x<=w+240;x+=120) ctx.quadraticCurveTo(x-farX+60,hy-24,x-farX+120,hy+4);
+          ctx.lineTo(w,h); ctx.lineTo(0,h); ctx.closePath(); ctx.fill();
+
+          const mShift=(state.bgOffset*0.18)%560;
+          ctx.fillStyle=&quot;#451A03&quot;;
+          for(let mx2=-560;mx2<w+560;mx2+=560){
+            const bx=mx2-mShift+220, by=hy-2;
+            ctx.beginPath(); ctx.arc(bx,by-10,13,Math.PI,0); ctx.fill();
+            ctx.fillRect(bx-16,by-10,32,12);
+            ctx.fillRect(bx+18,by-26,5,28);
+          }
+
+          const roadTop=hy+10, roadH=h-roadTop;
+          ctx.fillStyle=&quot;#1E293B&quot;; ctx.fillRect(0,roadTop,w,roadH);
+          ctx.fillStyle=&quot;#F59E0B&quot;; ctx.fillRect(0,roadTop,w,2);
+          const dash=state.bgOffset%64; ctx.fillStyle=&quot;rgba(248,250,252,0.5)&quot;;
+          for(let dx=-64;dx<w+64;dx+=64) ctx.fillRect(dx-dash,roadTop+roadH*0.48,34,3);
+
+          const lShift=state.bgOffset%200;
+          for(let lx=-200;lx<w+200;lx+=200){
+            const x=lx-lShift+50;
+            ctx.fillStyle=&quot;#475569&quot;; ctx.fillRect(x,roadTop-16,2,16);
+            ctx.fillStyle=&quot;#F59E0B&quot;; ctx.beginPath(); ctx.arc(x+1,roadTop-18,3.5,0,Math.PI*2); ctx.fill();
+          }
+
+          const px=Math.max(85,w*0.22), finX=px+(FINISH_DIST-state.playerDist)*5.8;
+          if(finX>-40 &amp;&amp; finX<w+40){
+            ctx.fillStyle=&quot;#F8FAFC&quot;; ctx.fillRect(finX,roadTop,10,roadH);
+            ctx.fillStyle=&quot;#F59E0B&quot;; ctx.fillRect(finX-24,roadTop-18,58,16);
+            ctx.fillStyle=&quot;#0F172A&quot;; ctx.font=&quot;700 9px sans-serif&quot;; ctx.textAlign=&quot;center&quot;; ctx.fillText(&quot;PENAMAT&quot;,finX+5,roadTop-7);
+          }
+          const aiY=roadTop+roadH*0.26, plY=roadTop+roadH*0.72, emitX=state.vehicle===&quot;car&quot;?px-52:px-24, emitY=plY+2, dustY=state.vehicle===&quot;car&quot;?plY+12:plY+17;
+          const aiX=px+(state.aiDist-state.playerDist)*5.8;
+          if(state.speed>=30){
+            const hs=state.status===&quot;nitro&quot;||state.speed>=75;
+            const dc=hs?3:(tick%2===0?1:0);
+            for(let d=0;d<dc;d++) particles.push({k:&quot;dust&quot;,x:emitX+(Math.random()-0.5)*12,y:dustY+(Math.random()-0.5)*5,vx:-(state.speed*0.06)-Math.random()*2,vy:-0.3-Math.random()*1,r:hs?6+Math.random()*6:4+Math.random()*3.5,l:hs?24:18,m:hs?24:18});
+            for(let g=0;g<(hs?3:1);g++) particles.push({k:&quot;grain&quot;,x:emitX+4,y:dustY+1,vx:-(state.speed*0.085)-Math.random()*4,vy:-1-Math.random()*1.8,r:1.3+Math.random()*1.2,l:15,m:15});
+          }
+          if(aiX>=-50 &amp;&amp; aiX<=w+50 &amp;&amp; DIFF_CFG[state.diff].ai>=45 &amp;&amp; tick%2===0){
+            particles.push({k:&quot;dust&quot;,x:(state.vehicle===&quot;car&quot;?aiX-42:aiX-22),y:(state.vehicle===&quot;car&quot;?aiY+10:aiY+16),vx:-3.2,vy:-0.4,r:4.5+Math.random()*3,l:18,m:18});
+          }
+          const tint = state.vehicle===&quot;camel&quot;?&quot;amber&quot;:state.carId===&quot;car-gt&quot;?&quot;cyan&quot;:state.carId===&quot;car-drift&quot;?&quot;cobalt&quot;:state.carId===&quot;car-ferrari&quot;?&quot;crimson&quot;:&quot;amber&quot;;
+          if(state.status===&quot;nitro&quot;){
+            ctx.save(); ctx.globalCompositeOperation=&quot;lighter&quot;;
+            const grad=ctx.createLinearGradient(emitX,emitY,emitX-85,emitY);
+            if(tint===&quot;cyan&quot;){ grad.addColorStop(0,&quot;rgba(236,254,255,0.92)&quot;); grad.addColorStop(0.5,&quot;rgba(34,211,238,0.7)&quot;); grad.addColorStop(1,&quot;rgba(14,165,233,0)&quot;); }
+            else if(tint===&quot;cobalt&quot;){ grad.addColorStop(0,&quot;rgba(254,249,195,0.92)&quot;); grad.addColorStop(0.5,&quot;rgba(56,189,248,0.72)&quot;); grad.addColorStop(1,&quot;rgba(29,78,216,0)&quot;); }
+            else if(tint===&quot;crimson&quot;){ grad.addColorStop(0,&quot;rgba(254,240,138,0.94)&quot;); grad.addColorStop(0.5,&quot;rgba(239,68,68,0.76)&quot;); grad.addColorStop(1,&quot;rgba(185,28,28,0)&quot;); }
+            else { grad.addColorStop(0,&quot;rgba(254,249,195,0.9)&quot;); grad.addColorStop(0.5,&quot;rgba(249,115,22,0.65)&quot;); grad.addColorStop(1,&quot;rgba(239,68,68,0)&quot;); }
+            ctx.fillStyle=grad; ctx.beginPath(); ctx.moveTo(emitX,emitY-7); ctx.lineTo(emitX-85,emitY); ctx.lineTo(emitX,emitY+7); ctx.closePath(); ctx.fill();
+            ctx.restore();
+            for(let i=0;i<4;i++) particles.push({k:&quot;flame&quot;,t:tint,x:emitX,y:emitY+(Math.random()-0.5)*8,vx:-5-Math.random()*5,vy:(Math.random()-0.5)*1.8,r:4+Math.random()*5,l:16,m:16});
+          }
+          if(particles.length>220) particles.splice(0,particles.length-220);
+          for(let i=particles.length-1;i>=0;i--){
+            const p=particles[i]; p.x+=p.vx; p.y+=p.vy; p.l--;
+            if(p.k===&quot;dust&quot;){ p.vx*=0.97; p.vy-=0.025; p.r+=0.28; }
+            else if(p.k===&quot;grain&quot;){ p.vy+=0.12; }
+            else { p.r*=0.95; }
+            if(p.l<=0){ particles.splice(i,1); continue; }
+            const t=p.l/p.m;
+            if(p.k===&quot;dust&quot;){
+              ctx.fillStyle=&quot;rgba(218,170,110,&quot;+(t*0.4)+&quot;)&quot;;
+              ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+            } else if(p.k===&quot;grain&quot;){
+              ctx.fillStyle=&quot;rgba(253,224,155,&quot;+(t*0.85)+&quot;)&quot;;
+              ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+            } else {
+              ctx.save(); ctx.globalCompositeOperation=&quot;lighter&quot;;
+              if(p.t===&quot;cyan&quot;) ctx.fillStyle=t>0.5?&quot;rgba(236,254,255,&quot;+t+&quot;)&quot;:&quot;rgba(34,211,238,&quot;+t+&quot;)&quot;;
+              else if(p.t===&quot;cobalt&quot;) ctx.fillStyle=t>0.5?&quot;rgba(254,249,195,&quot;+t+&quot;)&quot;:&quot;rgba(56,189,248,&quot;+t+&quot;)&quot;;
+              else if(p.t===&quot;crimson&quot;) ctx.fillStyle=t>0.5?&quot;rgba(254,240,138,&quot;+t+&quot;)&quot;:&quot;rgba(220,38,38,&quot;+t+&quot;)&quot;;
+              else ctx.fillStyle=t>0.5?&quot;rgba(253,224,71,&quot;+t+&quot;)&quot;:&quot;rgba(239,68,68,&quot;+t+&quot;)&quot;;
+              ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); ctx.restore();
+            }
+          }
+          if(aiX>=-60 &amp;&amp; aiX<=w+60){
+            if(state.vehicle===&quot;car&quot;) drawCar(aiX,aiY,false,DIFF_CFG[state.diff].ai,&quot;ai&quot;,sp);
+            else drawCamel(aiX,aiY,false,DIFF_CFG[state.diff].ai);
+          }
+          if(state.vehicle===&quot;car&quot;) drawCar(px,plY,true,state.speed,state.carId,sp);
+          else drawCamel(px,plY,true,state.speed);
+          ctx.fillStyle=&quot;rgba(15,23,42,0.75)&quot;; ctx.fillRect(10,8,210,20);
+          ctx.fillStyle=&quot;#FDE68A&quot;; ctx.font=&quot;600 10px monospace&quot;; ctx.textAlign=&quot;left&quot;;
+          ctx.fillText(&quot;speed: &quot;+Math.round(state.speed)+&quot; km/j · bgX: &quot;+Math.round(state.bgOffset)+&quot;px&quot;,16,21);
+        }
+      }
+      requestAnimationFrame(loop);
+    }
+
+    function startRace(){
+      unlockAudio();
+      stopAudio();
+      const cfg=DIFF_CFG[state.diff];
+      state.active=true; state.playerDist=0; state.aiDist=0; state.speed=BASE_SPEED; state.bgOffset=0;
+      state.status=&quot;normal&quot;; state.statusTimer=0; state.timeRem=cfg.time; state.totalTime=cfg.time;
+      state.correct=0; state.wrong=0; state.streak=0; state.bestStreak=0; state.topSpeed=BASE_SPEED;
+      state.deck=[].concat(QUESTIONS).sort(function(){ return Math.random()-0.5; });
+      state.qIdx=0;
+      particles.length=0;
+      showView(&quot;play&quot;);
+      updatePlayBadges();
+      renderQuestion();
+      playSfx(&quot;start&quot;);
+    }
+
+    document.querySelectorAll(&quot;.lkr-diff-btn&quot;).forEach(function(btn){
+      btn.addEventListener(&quot;click&quot;, function(){
+        unlockAudio();
+        playUi(&quot;select&quot;);
+        state.diff=btn.getAttribute(&quot;data-diff&quot;);
+        document.querySelectorAll(&quot;.lkr-diff-btn&quot;).forEach(function(b){ b.classList.toggle(&quot;active&quot;, b===btn); });
+      });
+    });
+    document.querySelectorAll(&quot;.lkr-filter-btn&quot;).forEach(function(btn){
+      btn.addEventListener(&quot;click&quot;, function(){
+        unlockAudio();
+        playUi(&quot;click&quot;);
+        state.boardFilter = btn.getAttribute(&quot;data-filter&quot;) || &quot;all&quot;;
+        document.querySelectorAll(&quot;.lkr-filter-btn&quot;).forEach(function(b){ b.classList.toggle(&quot;active&quot;, b===btn); });
+        renderLeaderboard();
+      });
+    });
+
+    $(&quot;brand-home&quot;).addEventListener(&quot;click&quot;, function(){ unlockAudio(); playUi(&quot;click&quot;); if(state.active){state.active=false;stopAudio();} showView(&quot;menu&quot;); });
+    $(&quot;lkr-camel-btn&quot;).addEventListener(&quot;click&quot;, function(){ unlockAudio(); playUi(&quot;select&quot;); state.vehicle=&quot;camel&quot;; renderCarOptions(); });
+    $(&quot;lkr-start-btn&quot;).addEventListener(&quot;click&quot;, startRace);
+    $(&quot;sum-again-btn&quot;).addEventListener(&quot;click&quot;, startRace);
+    $(&quot;sum-home-btn&quot;).addEventListener(&quot;click&quot;, function(){ unlockAudio(); playUi(&quot;click&quot;); showView(&quot;menu&quot;); });
+    $(&quot;board-play-btn&quot;).addEventListener(&quot;click&quot;, startRace);
+    $(&quot;notes-play-btn&quot;).addEventListener(&quot;click&quot;, startRace);
+    $(&quot;board-reset-btn&quot;).addEventListener(&quot;click&quot;, function(){
+      unlockAudio(); playUi(&quot;click&quot;);
+      memoryBoard = [].concat(SEEDED_BOARD);
+      try{ localStorage.setItem(STORE_KEY, JSON.stringify(memoryBoard)); }catch(e){}
+      renderLeaderboard();
+    });
+    $(&quot;sum-board-btn&quot;).addEventListener(&quot;click&quot;, function(){ unlockAudio(); playUi(&quot;click&quot;); renderLeaderboard(); showView(&quot;board&quot;); });
+    $(&quot;nav-arena&quot;).addEventListener(&quot;click&quot;, function(){ unlockAudio(); playUi(&quot;click&quot;); if(state.active){state.active=false;stopAudio();} showView(&quot;menu&quot;); });
+    $(&quot;nav-board&quot;).addEventListener(&quot;click&quot;, function(){ unlockAudio(); playUi(&quot;click&quot;); if(state.active){state.active=false;stopAudio();} renderLeaderboard(); showView(&quot;board&quot;); });
+    $(&quot;nav-notes&quot;).addEventListener(&quot;click&quot;, function(){ unlockAudio(); playUi(&quot;click&quot;); if(state.active){state.active=false;stopAudio();} showView(&quot;notes&quot;); });
+    $(&quot;header-cta&quot;).addEventListener(&quot;click&quot;, function(){ unlockAudio(); if(state.view===&quot;play&quot;){playUi(&quot;click&quot;);state.active=false;stopAudio();showView(&quot;menu&quot;);} else startRace(); });
+    $(&quot;btn-mute&quot;).addEventListener(&quot;click&quot;, function(){
+      unlockAudio();
+      state.muted=!state.muted;
+      playUi(&quot;toggle&quot;, !state.muted);
+      $(&quot;btn-mute&quot;).textContent = state.muted ? &quot;Bunyi: OFF&quot; : &quot;Bunyi: ON&quot;;
+      $(&quot;btn-mute&quot;).classList.toggle(&quot;on&quot;, !state.muted);
+    });
+    $(&quot;btn-music&quot;).addEventListener(&quot;click&quot;, function(){
+      unlockAudio();
+      state.musicMuted=!state.musicMuted;
+      playUi(&quot;toggle&quot;, !state.musicMuted);
+      $(&quot;btn-music&quot;).textContent = state.musicMuted ? &quot;Muzik: OFF&quot; : &quot;Muzik: ON&quot;;
+      $(&quot;btn-music&quot;).classList.toggle(&quot;on&quot;, !state.musicMuted);
+    });
+    window.addEventListener(&quot;pointerdown&quot;, unlockAudio, { passive:true });
+    window.addEventListener(&quot;keydown&quot;, function(e){
+      unlockAudio();
+      if(state.view!==&quot;play&quot; || state.answered) return;
+      const k=e.key.toUpperCase();
+      if(k===&quot;1&quot;||k===&quot;A&quot;) handleAnswer(0);
+      else if(k===&quot;2&quot;||k===&quot;B&quot;) handleAnswer(1);
+      else if(k===&quot;3&quot;||k===&quot;C&quot;) handleAnswer(2);
+      else if(k===&quot;4&quot;||k===&quot;D&quot;) handleAnswer(3);
+    });
+
+    renderCarOptions();
+    renderLeaderboard();
+    requestAnimationFrame(loop);
+  }
+
+  if(document.readyState === &quot;loading&quot;){
+    document.addEventListener(&quot;DOMContentLoaded&quot;, startApp);
+  } else {
+    startApp();
+  }
+})();
+</script>
+</body>
+</html>"
+></iframe>
